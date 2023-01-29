@@ -10,6 +10,7 @@ import { ReportComponent } from './report/report.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { NiClockModule } from 'ni-clock';
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    NiClockModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
