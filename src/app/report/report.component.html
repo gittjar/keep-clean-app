@@ -1,7 +1,9 @@
 
 <section class="report-main">
 <h2>Report any issues {{kiitosMessageStatus}}</h2>
-<p>{{TimeNow | date:'HH:mm:ss a | dd.MM.yyyy'}}</p>
+<!--shows PM/AM | date | timezone -->
+<p>{{TimeNow | date:'a | dd.MM.yyyy | z'}}</p>
+<ni-clock [time]="date" [auto]="true"></ni-clock>
 <div class="input-group mb-2">
     <select class="form-select" id="inputGroupSelect02">
       <option selected disabled>Choose report option...</option>

@@ -19,6 +19,8 @@ export class ReportComponent implements OnInit {
   timeStampText = 'Last report has send: ';
   isShowDiv = true;
   clicked = false;
+  date = new Date();
+
   
   
   
