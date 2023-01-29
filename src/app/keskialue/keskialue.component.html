@@ -1,0 +1,25 @@
+
+
+
+
+<section class="main">
+  
+  <button type="button" class="btn btn-primary" (click)='startTimer()'>Start Timer</button>
+  <button type="button" class="btn btn-primary" (click)='pauseTimer()'>Pause</button>
+  <button type="button" class="btn btn-primary" (click)='resetTimer()'>Reset</button>
+
+ 
+ 
+
+  <div [style.background-color]="color1" class="keskibox">
+    <h1>Last clean up done {{timeSet}} hours ago.</h1>
+    <p class="whitefont">{{overTimeText}}</p>
+  </div>
+
+  <span class="navbar-text">
+    Toilet Id: {{toiletId}} | {{toiletName}} | {{toiletLocation}}
+  </span>
+ 
+  <h2>Admin mode</h2>
+</section>
+

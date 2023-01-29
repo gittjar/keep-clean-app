@@ -1,0 +1,32 @@
+.main {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+}
+h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2.3rem;
+    color: rgb(198, 225, 249);
+}
+
+.keskibox {
+    width:100%;
+    border-radius: 20px;
+    padding-top: 30px;
+    height: 120px;
+    text-align: center;
+}
+
+.whitefont {
+    color: whitesmoke;
+    font-weight: 300;
+}
+
+button {
+    margin: 2px;
+}
+
