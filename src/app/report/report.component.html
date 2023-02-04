@@ -1,24 +1,21 @@
 
-<section class="report-main">
-<h2>Report any issues {{kiitosMessageStatus}}</h2>
-<p>{{TimeNow | date:'HH:mm:ss a | dd.MM.yyyy'}}</p>
-<div class="input-group mb-2">
-    <select class="form-select" id="inputGroupSelect02">
-      <option selected disabled>Choose report option...</option>
-      <option value="1">Report > dirty</option>
-      <option value="2">Report > papercases empty</option>
-      <option value="3">Report > thrashcan full</option>
-      <option value="4">Report > toilet broken</option>
-    </select>
-    <button type="button"class="input-group-text" for="inputGroupSelect02" (click)="togDisplay()"
-      (click)="onSubmitReport()" (click)="actionMethod($event)">Send Report</button>
-  </div>
-  <br>
-  <span [hidden]="isShowDiv" class="secret-text">
-    Last report has send: {{timeStamps | date:'HH:mm:ss a'}}. We are now on the way! 
-    
-</span>
-
-
-
-</section>
+  
+  <section class="report-main">
+    <h2>Report any issues {{kiitosMessageStatus}}</h2>
+    <div class="input-group mb-2 valikko">
+        <select class="form-select" id="inputGroupSelect02">
+          <option selected disabled>Choose report option...</option>
+          <option value="1">Report > dirty</option>
+          <option value="2">Report > papercases empty</option>
+          <option value="3">Report > thrashcan full</option>
+          <option value="4">Report > toilet broken</option>
+        </select>
+        <button type="button"class="input-group-text" for="inputGroupSelect02" (click)="togDisplay()"
+          (click)="onSubmitReport()" (click)="actionMethod($event)">Send Report</button>
+      </div>
+      <br>
+      <span [hidden]="isShowDiv" class="secret-text">
+        Last report has send: {{timeStamps | date:'HH:mm:ss a'}}. We are now on the way! 
+      </span>
+     
+  </section>   

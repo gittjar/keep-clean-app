@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 
 
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -13,16 +14,13 @@ export class ReportComponent implements OnInit {
   kiitosMessage = '> Your report has been send! Thank You.';
   kiitosMessageStatus = '';
   lastReportSend = '';
-  TimeNow = new Date();
+
   timeStamps = new Date(); // joka päivittyy per click
   timeStampBlank = '';
   timeStampText = 'Last report has send: ';
   isShowDiv = true;
   clicked = false;
-  
-  
-  
-
+ 
 
   constructor(){}
 
@@ -31,10 +29,7 @@ export class ReportComponent implements OnInit {
 
 
 
-
-
-
-
+  
 
   togDisplay() {  
     this.isShowDiv = !this.isShowDiv; 
@@ -43,7 +38,6 @@ export class ReportComponent implements OnInit {
     // report nappi disabloidaan painalluksen jälkeen!
     actionMethod(event: any) {
       event.target.disabled = true;
-      
   }
 
 

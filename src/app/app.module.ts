@@ -10,6 +10,11 @@ import { ReportComponent } from './report/report.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { NiClockModule } from 'ni-clock';
+import { FeaturesComponent } from './features/features.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PricelistComponent } from './pricelist/pricelist.component'
+
 
 
 @NgModule({
@@ -19,13 +24,18 @@ import { FormsModule } from '@angular/forms';
     FooterComponent,
     KeskialueComponent,
     ReportComponent,
+    FeaturesComponent,
+    PricelistComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    NiClockModule,
+    FontAwesomeModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

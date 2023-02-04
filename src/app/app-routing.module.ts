@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FeaturesComponent } from './features/features.component';
 import { ReportComponent } from './report/report.component';
+import { PricelistComponent } from './pricelist/pricelist.component';
 
 const routes: Routes = [
-  {path: 'report', component: ReportComponent}
-
+  // navbar
+  {path: 'report', component: ReportComponent},
+  // footer
+  {path: 'features', component: FeaturesComponent},
+  {path: 'pricelist', component: PricelistComponent}
 ];
 
 @NgModule({

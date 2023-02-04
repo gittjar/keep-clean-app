@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { timer, interval } from 'rxjs';
+import { Component,OnInit } from '@angular/core';
+import { faVirusSlash, faVirus } from '@fortawesome/free-solid-svg-icons';
+
+
 
 
 
@@ -8,9 +10,10 @@ import { timer, interval } from 'rxjs';
   templateUrl: './keskialue.component.html',
   styleUrls: ['./keskialue.component.css']
 })
-export class KeskialueComponent {
+export class KeskialueComponent implements OnInit {
 
- 
+  faVirusSlash = faVirusSlash;
+  faVirus = faVirus;
 
 
   toiletId = '1.44';
@@ -21,18 +24,52 @@ export class KeskialueComponent {
  // halfTime: number = 30;
   color1: string = '#06E703';
   overTimeText: string | undefined;
+  date = new Date();
+  TimeNow = new Date();
 
- 
+  ShowHidden = false;
+  ShowHiddenVirus = true;
+  allowPinCode: boolean = false;
 
+  constructor(){
+    setTimeout(() => {
+      this.allowPinCode = true;}, 5000);}
+  
+  ngOnInit():void {
+    
+ }
+
+ OpenButton (){
+  this.allowPinCode = !this.allowPinCode;
+ }
+
+
+
+      // reset nappi disabloidaan painalluksen jälkeen!
+      actionMethod(event: any) {
+        event.target.disabled = true;
+        
+    }
+
+  // tämä näyttää viruskielletty kuvakkeen
+  HiddenShowEKA() {  
+    this.ShowHidden = !this.ShowHidden;
+    }
+
+    // tämä näyttää viruskuvakkeen
+    HiddenShowTOKA() {  
+      this.ShowHiddenVirus = !this.ShowHiddenVirus;
+      }
 
   startTimer() {
     this.interval = setInterval(() => {
-      if(this.timeSet < 72) {
+      if(this.timeSet < 24) {
         this.timeSet++;
       } else {
         //this.timeSet = 0;
         this.pauseTimer();
       }
+      
       if(this.timeSet > 1){
         this.color1 = '#18E703';
       }
@@ -53,15 +90,18 @@ export class KeskialueComponent {
       }
       if(this.timeSet > 7){
         this.color1 = '#E7C103';
+        
       }
       if(this.timeSet > 8){
         this.color1 = '#E79E03';
+       
       }
       if(this.timeSet > 9){
         this.color1 = '#E77803';
       }
       if(this.timeSet > 10){
         this.color1 = '#E75D03';
+        
       }
       if(this.timeSet > 11){
         this.color1 = '#E73E03';
@@ -69,12 +109,14 @@ export class KeskialueComponent {
       if(this.timeSet > 12){
         this.color1 = '#E72203';
       }
-      if(this.timeSet > 13){
+      if(this.timeSet == 13){
         this.overTimeText = 'Last clean up was done, more than our service promise!';
+        this.HiddenShowEKA();
+        this.HiddenShowTOKA()
       }
 
 
-    },500) // interval 1000 = 1s, for demo 2500 per one = 2,5s
+    },2500) // interval 1000 = 1s, for demo 2500 per one = 2,5s
   }
   pauseTimer() {
     clearInterval(this.interval);
@@ -86,12 +128,14 @@ export class KeskialueComponent {
     this.timeSet = 0;
     this.color1 = '#06E703';
     this.overTimeText = '';
+    this.ShowHidden = !this.ShowHidden;
+    this.ShowHiddenVirus = true;
   }
 
-  
-
-
 }
+
+
+
 
 
   /*
