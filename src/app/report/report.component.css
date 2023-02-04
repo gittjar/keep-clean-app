@@ -14,7 +14,9 @@
     
   }
 
-
+.valikko {
+    width: 400px;
+}
   
   .example-full-width {
     width: 100%;

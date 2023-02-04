@@ -1,7 +1,7 @@
 .main {
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10%;
+    margin-left: 8%;
+    margin-right: 8%;
+    margin-top: 2%;
 }
 h1 {
     font-weight: 700;
@@ -10,7 +10,7 @@ h1 {
 
 h2 {
     font-size: 2.3rem;
-    color: rgb(198, 225, 249);
+    color: rgb(205, 232, 255);
 }
 
 .keskibox {
