@@ -1,0 +1,5 @@
+.kortit, .card {
+    display: flex;
+    margin-left: 7%;
+    margin-top: 4%;
+}

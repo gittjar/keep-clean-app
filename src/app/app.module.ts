@@ -11,6 +11,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { NiClockModule } from 'ni-clock';
+import { FeaturesComponent } from './features/features.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PricelistComponent } from './pricelist/pricelist.component'
+
 
 
 @NgModule({
@@ -20,6 +24,8 @@ import { NiClockModule } from 'ni-clock';
     FooterComponent,
     KeskialueComponent,
     ReportComponent,
+    FeaturesComponent,
+    PricelistComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +33,8 @@ import { NiClockModule } from 'ni-clock';
     BrowserAnimationsModule,
     MatInputModule,
     FormsModule,
-    NiClockModule
+    NiClockModule,
+    FontAwesomeModule
     
   ],
   providers: [],
