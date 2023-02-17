@@ -44,10 +44,41 @@
 
   <span>
     <p>{{TimeNow | date:'HH:MM a | dd.MM.yyyy | z'}}</p>
-    Toilet Id: {{toiletId}} | {{toiletName}} | {{toiletLocation}}
-    
   </span>
- 
- 
+
+    
+
+      <section class="cards">
+
+
+      <div class="card single-card" style="width: 18rem;" *ngFor="let x of toilet_url">
+        <img src="{{x.image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h3 class="card-title">{{x.location}}</h3>
+          <h5 class="card-title">{{x.streetaddress}}</h5>
+          <p class="card-text"></p>
+        </div>
+        <ul class="list-group list-group-flush">
+
+          <li class="list-group-item">{{x.name}} <fa-icon [icon]="faArrowRight"></fa-icon>
+            {{x.subname}}</li>
+            
+          <li class="list-group-item">Floor: {{x.floor}}</li>
+          <li class="list-group-item">Gender: {{x.gender}}</li>
+          <!--
+          <li class="list-group-item" >Clean: {{x.status}}</li>
+          -->
+          <li class="list-group-item" *ngIf="x.status == true" [style.background-color]="cardStatusColorGreen"></li>
+          <li class="list-group-item" *ngIf="x.status == false" [style.background-color]="cardStatusColorRed"></li>
+
+        </ul>
+        <!--
+        <div class="card-body">
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+        -->
+      </div>
+    </section>
 </section>
 
