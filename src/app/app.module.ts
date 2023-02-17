@@ -13,7 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { NiClockModule } from 'ni-clock';
 import { FeaturesComponent } from './features/features.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PricelistComponent } from './pricelist/pricelist.component'
+import { PricelistComponent } from './pricelist/pricelist.component';
+import { UserInterfaceComponent } from './user-interface/user-interface.component';
+import { TargetsComponent } from './targets/targets.component'
 
 
 
@@ -26,6 +28,8 @@ import { PricelistComponent } from './pricelist/pricelist.component'
     ReportComponent,
     FeaturesComponent,
     PricelistComponent,
+    UserInterfaceComponent,
+    TargetsComponent,
   ],
   imports: [
     BrowserModule,
