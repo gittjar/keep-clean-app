@@ -82,7 +82,6 @@ HiddenShowTOKA() {
         //this.timeSet = 0;
         this.pauseTimer();
       }
-      
       if(this.timeSet > 1){
         this.color1 = '#18E703';
       }
@@ -102,19 +101,16 @@ HiddenShowTOKA() {
         this.color1 = '#E7E703';
       }
       if(this.timeSet > 7){
-        this.color1 = '#E7C103';
-        
+        this.color1 = '#E7C103'; 
       }
       if(this.timeSet > 8){
         this.color1 = '#E79E03';
-       
       }
       if(this.timeSet > 9){
         this.color1 = '#E77803';
       }
       if(this.timeSet > 10){
         this.color1 = '#E75D03';
-        
       }
       if(this.timeSet > 11){
         this.color1 = '#E73E03';
@@ -142,7 +138,4 @@ HiddenShowTOKA() {
     this.ShowHidden = !this.ShowHidden;
     this.ShowHiddenVirus = true;
   }
-
-
   }
-

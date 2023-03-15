@@ -8,15 +8,15 @@
     margin-bottom: 4%;
     padding: 25px;
 
-    border: 1px rgb(9, 161, 255) solid;
+    border: 1px rgb(59, 97, 120) solid;
     width: 500px;
     border-radius: 10px;
     box-shadow:
-    rgba(9, 161, 225, 0.4) 0px 7px, 
-    rgba(89, 161, 225, 0.3) 0px 12px, 
-    rgba(9, 161, 225, 0.2) 0px 17px, 
-    rgba(9, 161, 225, 0.1) 0px 22px, 
-    rgba(9, 161, 225, 0.05) 0px 27px;
+    rgba(59, 97, 120, 0.4) 0px 7px, 
+    rgba(59, 97, 120, 0.3) 0px 12px, 
+    rgba(59, 97, 120, 0.2) 0px 17px, 
+    rgba(59, 97, 120, 0.1) 0px 22px, 
+    rgba(59, 97, 120, 0.05) 0px 27px;
 }
 
 .example-form {

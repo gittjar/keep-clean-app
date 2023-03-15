@@ -22,6 +22,8 @@ export class UserInterfaceComponent implements OnInit {
   interval: any;
  // halfTime: number = 30;
   color1: string = '#06E703';
+  color2: string = '#ffffff';
+
   overTimeText: string | undefined;
   date = new Date();
   TimeNow = new Date();
@@ -41,24 +43,14 @@ export class UserInterfaceComponent implements OnInit {
   ngOnInit():void {
     this.startTimer();
  }
-
-
-
-
-
-
-
  OpenButton (){
   this.allowPinCode = !this.allowPinCode;
  }
 
-
-
-      // reset nappi disabloidaan painalluksen jälkeen!
-      actionMethod(event: any) {
-        event.target.disabled = true;
-        
-    }
+// reset nappi disabloidaan painalluksen jälkeen!
+actionMethod(event: any) {
+event.target.disabled = true;    
+  }
 
   // tämä näyttää viruskielletty kuvakkeen
   HiddenShowEKA() {  
@@ -77,46 +69,57 @@ export class UserInterfaceComponent implements OnInit {
       } else {
         //this.timeSet = 0;
         this.pauseTimer();
-      }
-      
+      }    
       if(this.timeSet > 1){
         this.color1 = '#18E703';
+        this.color2 = '#ededed';
       }
       if(this.timeSet > 2){
         this.color1 = '#37E703';
+        this.color2 = '#ededed';
       }
       if(this.timeSet > 3){
         this.color1 = '#59E703';
+        this.color2 = '#e8e8e8';
       }
       if(this.timeSet > 4){
         this.color1 = '#8AE703';
+        this.color2 = '#e8e8e8';
       }
       if(this.timeSet > 5){
         this.color1 = '#A9E703';
+        this.color2 = '#e3e3e3';
       }
       if(this.timeSet > 6){
         this.color1 = '#E7E703';
+        this.color2 = '#e3e3e3';
       }
       if(this.timeSet > 7){
         this.color1 = '#E7C103';
-        
+        this.color2 = '#dedede';
       }
       if(this.timeSet > 8){
         this.color1 = '#E79E03';
-       
+        this.color2 = '#dedede';   
       }
       if(this.timeSet > 9){
         this.color1 = '#E77803';
+        this.color2 = '#cccccc';   
+
       }
       if(this.timeSet > 10){
         this.color1 = '#E75D03';
-        
+        this.color2 = '#cccccc';   
       }
       if(this.timeSet > 11){
         this.color1 = '#E73E03';
+        this.color2 = '#c2c2c2';   
+
       }
       if(this.timeSet > 12){
         this.color1 = '#E72203';
+        this.color2 = '#b0b0b0';   
+
       }
       if(this.timeSet == 13){
         this.overTimeText = 'Please, don´t use now this toilet area. Our cleaning team is on the way!';
@@ -125,7 +128,7 @@ export class UserInterfaceComponent implements OnInit {
       }
 
 
-    },10000) // interval 1000 = 1s, for demo 10000 per one = 10s
+    },5000) // interval 1000 = 1s, for demo 10000 per one = 10s
   }
   pauseTimer() {
     clearInterval(this.interval);
@@ -139,6 +142,8 @@ export class UserInterfaceComponent implements OnInit {
     this.overTimeText = '';
     this.ShowHidden = !this.ShowHidden;
     this.ShowHiddenVirus = true;
+    this.color2 = '#ffffff';
+
   }
 
 }
