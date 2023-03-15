@@ -1,0 +1,90 @@
+.site{
+    border: 3px solid rgb(216, 216, 216);
+    padding: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-radius: 15px;
+
+}
+
+.main {
+    margin-left: 8%;
+    margin-right: 8%;
+    
+
+}
+h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2.3rem;
+    color: rgb(205, 232, 255);
+}
+
+.keskibox {
+    width:100%;
+    border-radius: 20px;
+    padding-top: 30px;
+    height: 120px;
+    border: 1px solid rgb(36, 36, 36);
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow:
+    rgba(82, 82, 82, 0.4) 0px 7px, 
+    rgba(82, 82, 82, 0.3) 0px 12px, 
+    rgba(82, 82, 82, 0.2) 0px 17px, 
+    rgba(82, 82, 82, 0.1) 0px 22px, 
+    rgba(82, 82, 82, 0.05) 0px 27px;
+}
+
+.stars {
+    font-size: large;
+    color: rgb(30, 36, 0);
+}
+.fa-star {
+    padding: 1px;
+}
+
+
+.whitefont {
+    color: whitesmoke;
+    font-weight: 300;
+}
+
+button {
+    margin: 2px;
+}
+
+.bottompart{
+    display: flex;
+    flex-direction: row;
+}
+
+/*Mediascreen tabletti ja pienempi*/
+
+@media (max-width: 768px) {
+    h1 {
+        font-weight: 700;
+        font-size: 1.9rem;
+    }
+
+
+    .keskibox {
+        width:100%;
+        border-radius: 20px;
+        padding-top: 30px;
+        height: 130px;
+        border: 1px solid rgb(36, 36, 36);
+        text-align: center;
+        margin-bottom: 25px;
+        box-shadow:
+        rgba(82, 82, 82, 0.4) 0px 7px, 
+        rgba(82, 82, 82, 0.3) 0px 12px, 
+        rgba(82, 82, 82, 0.2) 0px 17px, 
+        rgba(82, 82, 82, 0.1) 0px 22px, 
+        rgba(82, 82, 82, 0.05) 0px 27px;
+    }
+    
+  }

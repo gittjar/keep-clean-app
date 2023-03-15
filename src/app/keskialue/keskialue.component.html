@@ -5,7 +5,7 @@
     <ni-clock [time]="date" [auto]="true"></ni-clock>
     shows PM/AM | date | timezone -->
    
-    <h2>Demo mode <fa-icon [icon]="faVirusSlash" size="xl"></fa-icon> "KCC - Keep Clean Company" Confidential</h2>
+    <h2>Admin interface <fa-icon [icon]="faVirusSlash" size="xl"></fa-icon> > Confidential</h2>
 
 <section class="d-flex py-1">
   <button [disabled]="allowPinCode" type="button" class="btn btn-primary" (click)='startTimer()'>Start Timer</button>
@@ -35,19 +35,40 @@
     <span [hidden]="ShowHiddenVirus">
       <fa-icon [icon]="faVirus"></fa-icon>
       </span>
-
-  
   </h1>
-
     <p class="whitefont">{{overTimeText}}</p>
   </div>
-
   <span>
     <p>{{TimeNow | date:'HH:MM a | dd.MM.yyyy | z'}}</p>
-    Toilet Id: {{toiletId}} | {{toiletName}} | {{toiletLocation}}
-    
   </span>
- 
- 
-</section>
+      <section class="cards">
+      <div class="card single-card" style="width: 18rem;" *ngFor="let x of toilet_url">
+        <img src="{{x.image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h3 class="card-title">{{x.location}}</h3>
+          <h5 class="card-title">{{x.streetaddress}}</h5>
+          <p class="card-text"></p>
+        </div>
+        <ul class="list-group list-group-flush">
 
+          <li class="list-group-item">{{x.name}} <fa-icon [icon]="faArrowRight"></fa-icon>
+            {{x.subname}}</li>
+            
+          <li class="list-group-item">Floor: {{x.floor}}</li>
+          <li class="list-group-item">Gender: {{x.gender}}</li>
+          <!--
+          <li class="list-group-item" >Clean: {{x.status}}</li>
+          -->
+          <li class="list-group-item" *ngIf="x.status == true" [style.background-color]="cardStatusColorGreen"></li>
+          <li class="list-group-item" *ngIf="x.status == false" [style.background-color]="cardStatusColorRed"></li>
+
+        </ul>
+        <!--
+        <div class="card-body">
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+        -->
+      </div>
+    </section>
+</section>
