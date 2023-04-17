@@ -6,9 +6,11 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { KeskialueComponent } from './keskialue/keskialue.component';
 import { UserInterfaceComponent } from './user-interface/user-interface.component';
 import { TargetsComponent } from './targets/targets.component';
+import { MainpageComponent } from './mainpage/mainpage.component';
 
 const routes: Routes = [
   // navbar
+  {path: 'mainpage', component : MainpageComponent},
   {path: 'report', component: ReportComponent},
   // footer jne..
   {path: 'features', component: FeaturesComponent},
