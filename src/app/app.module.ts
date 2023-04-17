@@ -17,6 +17,7 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { UserInterfaceComponent } from './user-interface/user-interface.component';
 import { TargetsComponent } from './targets/targets.component'
 import { HttpClientModule } from '@angular/common/http';
+import { MainpageComponent } from './mainpage/mainpage.component';
 
 
 
@@ -31,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     PricelistComponent,
     UserInterfaceComponent,
     TargetsComponent,
+    MainpageComponent,
     
   ],
   imports: [
