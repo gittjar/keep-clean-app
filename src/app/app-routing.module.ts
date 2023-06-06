@@ -11,6 +11,7 @@ import { MainpageComponent } from './mainpage/mainpage.component';
 const routes: Routes = [
   // navbar
   {path: 'mainpage', component : MainpageComponent},
+  {path: '', component : MainpageComponent},
   {path: 'report', component: ReportComponent},
   // footer jne..
   {path: 'features', component: FeaturesComponent},
