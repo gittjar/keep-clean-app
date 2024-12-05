@@ -1,6 +1,7 @@
 import { Component,OnInit } from '@angular/core';
-import { faVirusSlash, faVirus } from '@fortawesome/free-solid-svg-icons';
-
+import { faVirusSlash, faVirus, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { Toilet } from '../models/toilet';
+import { ToiletlocationService } from '../toiletlocation.service';
 
 
 
@@ -12,13 +13,17 @@ import { faVirusSlash, faVirus } from '@fortawesome/free-solid-svg-icons';
 })
 export class KeskialueComponent implements OnInit {
 
+  // fontawesomen icons
   faVirusSlash = faVirusSlash;
   faVirus = faVirus;
-
+  faArrowRight = faArrowRight;
 
   toiletId = '1.44';
   toiletName = 'Terminal 1 / M / Basement';
   toiletLocation = 'Helsinki-Vantaa Airport'
+
+  toilet_url: Toilet [] = [];
+
   timeSet: number = 0;
   interval: any;
  // halfTime: number = 30;
@@ -31,12 +36,21 @@ export class KeskialueComponent implements OnInit {
   ShowHiddenVirus = true;
   allowPinCode: boolean = false;
 
-  constructor(){
+  // kortin alaosassa oleva määrittely true / false muuttaa väriä
+  cardStatusColorGreen: string = '#06E703';
+  cardStatusColorRed: string = '#E72203';
+
+
+  constructor(private hpservice: ToiletlocationService){
     setTimeout(() => {
       this.allowPinCode = true;}, 5000);}
   
   ngOnInit():void {
-    
+    this.getToilet();
+ }
+
+ getToilet():void{
+  this.hpservice.getToilet().subscribe(toilet_url => this.toilet_url = toilet_url);
  }
 
  OpenButton (){
@@ -45,21 +59,20 @@ export class KeskialueComponent implements OnInit {
 
 
 
-      // reset nappi disabloidaan painalluksen jälkeen!
-      actionMethod(event: any) {
-        event.target.disabled = true;
-        
+// reset nappi disabloidaan painalluksen jälkeen!
+actionMethod(event: any) {
+event.target.disabled = true;      
     }
 
-  // tämä näyttää viruskielletty kuvakkeen
-  HiddenShowEKA() {  
-    this.ShowHidden = !this.ShowHidden;
+// tämä näyttää viruskielletty kuvakkeen
+HiddenShowEKA() {  
+  this.ShowHidden = !this.ShowHidden;
     }
 
-    // tämä näyttää viruskuvakkeen
-    HiddenShowTOKA() {  
-      this.ShowHiddenVirus = !this.ShowHiddenVirus;
-      }
+// tämä näyttää viruskuvakkeen
+HiddenShowTOKA() {  
+  this.ShowHiddenVirus = !this.ShowHiddenVirus;
+    }
 
   startTimer() {
     this.interval = setInterval(() => {
@@ -69,7 +82,6 @@ export class KeskialueComponent implements OnInit {
         //this.timeSet = 0;
         this.pauseTimer();
       }
-      
       if(this.timeSet > 1){
         this.color1 = '#18E703';
       }
@@ -89,19 +101,16 @@ export class KeskialueComponent implements OnInit {
         this.color1 = '#E7E703';
       }
       if(this.timeSet > 7){
-        this.color1 = '#E7C103';
-        
+        this.color1 = '#E7C103'; 
       }
       if(this.timeSet > 8){
         this.color1 = '#E79E03';
-       
       }
       if(this.timeSet > 9){
         this.color1 = '#E77803';
       }
       if(this.timeSet > 10){
         this.color1 = '#E75D03';
-        
       }
       if(this.timeSet > 11){
         this.color1 = '#E73E03';
@@ -122,8 +131,6 @@ export class KeskialueComponent implements OnInit {
     clearInterval(this.interval);
   }
 
-
-
   resetTimer() {
     this.timeSet = 0;
     this.color1 = '#06E703';
@@ -131,39 +138,4 @@ export class KeskialueComponent implements OnInit {
     this.ShowHidden = !this.ShowHidden;
     this.ShowHiddenVirus = true;
   }
-
-}
-
-
-
-
-
-  /*
-  timeLeft: number = 60;
-  interval: any;
- // halfTime: number = 30;
-
-  color1: string = '#fb8857';
-  startTimer() {
-    this.interval = setInterval(() => {
-      if(this.timeLeft > 0) {
-        this.timeLeft--;
-      } else {
-        this.timeLeft = 60;
-      }
-      if(this.timeLeft < 30){
-        this.color1 = 'yellow';
-      }
-
-    },1000)
   }
-  pauseTimer() {
-    clearInterval(this.interval);
-  }
-
-  resetTimer() {
-    this.timeLeft = 60;
-    this.color1 = '#fb8857';
-  }
-  */
-

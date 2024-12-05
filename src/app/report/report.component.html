@@ -1,7 +1,7 @@
 
   
   <section class="report-main">
-    <h2>Report any issues {{kiitosMessageStatus}}</h2>
+    <h2>Report any issues <br> {{kiitosMessageStatus}}</h2>
     <div class="input-group mb-2 valikko">
         <select class="form-select" id="inputGroupSelect02">
           <option selected disabled>Choose report option...</option>
@@ -15,7 +15,8 @@
       </div>
       <br>
       <span [hidden]="isShowDiv" class="secret-text">
-        Last report has send: {{timeStamps | date:'HH:mm:ss a'}}. We are now on the way! 
+        Last report has send: {{timeStamps | date:'HH:mm:ss a'}}. We are now on the way!
+      <br>
       </span>
      
   </section>   
