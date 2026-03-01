@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-pricelist',
   templateUrl: './pricelist.component.html',
   styleUrls: ['./pricelist.component.css']

@@ -7,6 +7,7 @@ import { ToiletlocationService } from '../toiletlocation.service';
 
 
 @Component({
+  standalone: false,
   selector: 'app-keskialue',
   templateUrl: './keskialue.component.html',
   styleUrls: ['./keskialue.component.css']

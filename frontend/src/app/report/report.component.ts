@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 
 
 @Component({
+  standalone: false,
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.css']

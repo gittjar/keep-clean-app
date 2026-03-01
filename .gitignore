@@ -1,15 +1,19 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Node modules - kaikki tasot
+node_modules/
+
 # Compiled output
-/dist
+dist/
 /tmp
 /out-tsc
 /bazel-out
+frontend/dist/
+backend/dist/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Angular cache
+.angular/
+frontend/.angular/
 
 # IDEs and editors
 .idea/
@@ -29,7 +33,6 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
@@ -42,13 +45,20 @@ testem.log
 Thumbs.db
 
 # Firebase
-.firebase
+.firebase/
 *-debug.log
 .runtimeconfig.json
+firebase.json
 
+# Ympäristömuuttujat - EI koskaan versionhallintaan
 .env
-node_modules/
-dist/
+.env.local
+.env.production
+
+# Logit
+npm-debug.log
+yarn-error.log
+*.log
 
 
 

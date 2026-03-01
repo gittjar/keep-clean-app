@@ -4,6 +4,7 @@ import { faStar } from '@fortawesome/free-regular-svg-icons'
 
 
 @Component({
+  standalone: false,
   selector: 'app-user-interface',
   templateUrl: './user-interface.component.html',
   styleUrls: ['./user-interface.component.css']

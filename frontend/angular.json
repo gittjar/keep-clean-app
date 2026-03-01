@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "keep-clean-app:build:production"
+              "buildTarget": "keep-clean-app:build:production"
             },
             "development": {
-              "browserTarget": "keep-clean-app:build:development"
+              "buildTarget": "keep-clean-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "keep-clean-app:build"
+            "buildTarget": "keep-clean-app:build"
           }
         },
         "test": {
@@ -103,7 +103,7 @@
           "options": {
             "prerender": false,
             "ssr": false,
-            "browserTarget": "keep-clean-app:build:production",
+            "buildTarget": "keep-clean-app:build:production",
             "firebaseProject": "angular-web-applications",
             "firebaseHostingSite": "keep-clean"
           }

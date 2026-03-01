@@ -3,6 +3,7 @@ import { faHeart, faClipboard, faClock, faFaceSmileBeam } from '@fortawesome/fre
 import { faListCheck, faLayerGroup, faUsersSlash, faCode } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
+  standalone: false,
   selector: 'app-features',
   templateUrl: './features.component.html',
   styleUrls: ['./features.component.css']
