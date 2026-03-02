@@ -1,0 +1,44 @@
+<div class="display-wrapper" [style.background]="color2">
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" style="color:#333"></div>
+  </div>
+
+  <div *ngIf="errorMsg" class="text-center py-5 text-danger">{{ errorMsg }}</div>
+
+  <div *ngIf="!loading && toilet" class="display-content">
+
+    <!-- Statusväripalkki ylhäällä -->
+    <div class="status-bar" [style.background]="color1"></div>
+
+    <!-- Otsikko -->
+    <div class="header-section">
+      <div class="toilet-id" *ngIf="toilet.toiletId">{{ toilet.toiletId }}</div>
+      <h1 class="toilet-name">{{ toilet.name }}</h1>
+      <p class="toilet-location">{{ toilet.location }}</p>
+    </div>
+
+    <!-- Status-indikaattori -->
+    <div class="status-circle" [style.background]="color1">
+      <div class="status-inner">
+        <span class="status-label">{{ statusLabel }}</span>
+      </div>
+    </div>
+
+    <!-- Aika siivottu -->
+    <div class="time-section">
+      <p class="time-label">Last cleaned</p>
+      <p class="time-value">{{ elapsedDisplay }} ago</p>
+      <p class="time-exact">{{ (toilet.lastCleaned | date:'HH:mm – dd.MM.yyyy') }}</p>
+    </div>
+
+    <!-- Varoitusteksti -->
+    <div *ngIf="showWarning" class="warning-box">
+      {{ overTimeText }}
+    </div>
+
+    <!-- Nykyinen aika -->
+    <div class="clock">{{ TimeNow | date:'HH:mm' }}</div>
+
+  </div>
+</div>

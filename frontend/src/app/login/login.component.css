@@ -1,0 +1,27 @@
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6f9;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+h2 {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.subtitle {
+  color: #888;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}

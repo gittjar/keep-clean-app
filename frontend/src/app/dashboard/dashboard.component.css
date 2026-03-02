@@ -1,0 +1,18 @@
+.dashboard-wrapper {
+  min-height: 100vh;
+  background: #f4f6f9;
+}
+
+.toilet-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: box-shadow 0.2s;
+}
+
+.toilet-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+.border-dashed {
+  border: 2px dashed #ccc !important;
+}

@@ -1,0 +1,74 @@
+<div class="dashboard-wrapper container-fluid py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h2 class="mb-0">Keep Clean – Hallintapaneeli</h2>
+      <small class="text-muted">Kirjautunut: {{ username }}</small>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Kirjaudu ulos</button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+
+  <div *ngIf="!loading">
+    <!-- WC-tilojen lista -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4" *ngFor="let toilet of toilets">
+        <div class="card toilet-card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ toilet.name }}</h5>
+            <p class="card-text text-muted mb-1">{{ toilet.location }}</p>
+            <p class="card-text text-muted mb-2" *ngIf="toilet.toiletId">ID: {{ toilet.toiletId }}</p>
+            <span class="badge bg-info text-dark mb-3">Siivottu: {{ getElapsed(toilet.lastCleaned) }}</span>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn btn-success btn-sm" (click)="resetTimer(toilet)">
+                ✅ Nollaa timer
+              </button>
+              <button class="btn btn-outline-primary btn-sm" (click)="goToDisplay(toilet)">
+                🖥 Näyttö
+              </button>
+              <button class="btn btn-outline-danger btn-sm" (click)="deleteToilet(toilet._id)">
+                🗑 Poista
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="toilets.length === 0 && !showAddForm">
+        <div class="card h-100 border-dashed">
+          <div class="card-body text-center text-muted d-flex align-items-center justify-content-center">
+            <p>Ei WC-tiloja vielä. Lisää ensimmäinen!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lisää uusi WC-tila -->
+    <button class="btn btn-primary mb-3" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? '✕ Peruuta' : '+ Lisää WC-tila' }}
+    </button>
+
+    <div *ngIf="showAddForm" class="card p-3 mb-4" style="max-width: 480px;">
+      <h5>Uusi WC-tila</h5>
+      <div class="mb-2">
+        <label class="form-label">Nimi *</label>
+        <input type="text" class="form-control" [(ngModel)]="newName" placeholder="esim. Terminal 1 / M / Basement" />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Sijainti *</label>
+        <input type="text" class="form-control" [(ngModel)]="newLocation" placeholder="esim. Helsinki-Vantaa Airport" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Tilan ID (valinnainen)</label>
+        <input type="text" class="form-control" [(ngModel)]="newToiletId" placeholder="esim. 1.44" />
+      </div>
+      <button class="btn btn-success" (click)="addToilet()" [disabled]="adding || !newName || !newLocation">
+        {{ adding ? 'Lisätään...' : 'Lisää' }}
+      </button>
+    </div>
+  </div>
+</div>
