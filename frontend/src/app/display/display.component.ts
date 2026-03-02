@@ -23,6 +23,14 @@ export class DisplayComponent implements OnInit, OnDestroy {
   overTimeText = '';
   showWarning = false;
 
+  // PIN-resetointi
+  showPinModal = false;
+  pinUsername = '';
+  pinCode = '';
+  pinError = '';
+  pinSuccess = '';
+  pinLoading = false;
+
   constructor(
     private route: ActivatedRoute,
     private toiletService: ToiletService
@@ -30,10 +38,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadToilet(id);
-    }
-    // Päivitä kello joka sekunti
+    if (id) this.loadToilet(id);
     this.clockInterval = setInterval(() => { this.TimeNow = new Date(); }, 1000);
   }
 
@@ -43,14 +48,11 @@ export class DisplayComponent implements OnInit, OnDestroy {
   }
 
   loadToilet(id: string) {
-    this.toiletService.getToilets().subscribe({
-      next: (toilets) => {
-        this.toilet = toilets.find(t => t._id === id) || null;
-        if (this.toilet) {
-          this.updateTimer();
-          // Päivitä joka minuutti
-          this.interval = setInterval(() => this.updateTimer(), 60000);
-        }
+    this.toiletService.getToiletPublic(id).subscribe({
+      next: (toilet) => {
+        this.toilet = toilet;
+        this.updateTimer();
+        this.interval = setInterval(() => this.updateTimer(), 60000);
         this.loading = false;
       },
       error: () => { this.errorMsg = 'Tietoja ei saatu'; this.loading = false; }
@@ -100,5 +102,36 @@ export class DisplayComponent implements OnInit, OnDestroy {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}h ${minutes}min`;
+  }
+
+  openPinModal() {
+    this.showPinModal = true;
+    this.pinCode = '';
+    this.pinUsername = '';
+    this.pinError = '';
+    this.pinSuccess = '';
+  }
+
+  closePinModal() {
+    this.showPinModal = false;
+  }
+
+  submitPin() {
+    if (!this.toilet || !this.pinUsername || this.pinCode.length < 4) return;
+    this.pinLoading = true;
+    this.pinError = '';
+    this.toiletService.pinReset(this.toilet._id, this.pinUsername, this.pinCode).subscribe({
+      next: (res) => {
+        if (this.toilet) this.toilet.lastCleaned = res.lastCleaned;
+        this.updateTimer();
+        this.pinSuccess = 'Timer nollattu!';
+        this.pinLoading = false;
+        setTimeout(() => { this.showPinModal = false; this.pinSuccess = ''; }, 1500);
+      },
+      error: (err) => {
+        this.pinError = err.error?.message || 'Virheellinen PIN';
+        this.pinLoading = false;
+      }
+    });
   }
 }

@@ -8,37 +8,70 @@
 
   <div *ngIf="!loading && toilet" class="display-content">
 
-    <!-- Statusväripalkki ylhäällä -->
     <div class="status-bar" [style.background]="color1"></div>
 
-    <!-- Otsikko -->
     <div class="header-section">
       <div class="toilet-id" *ngIf="toilet.toiletId">{{ toilet.toiletId }}</div>
       <h1 class="toilet-name">{{ toilet.name }}</h1>
       <p class="toilet-location">{{ toilet.location }}</p>
     </div>
 
-    <!-- Status-indikaattori -->
     <div class="status-circle" [style.background]="color1">
       <div class="status-inner">
         <span class="status-label">{{ statusLabel }}</span>
       </div>
     </div>
 
-    <!-- Aika siivottu -->
     <div class="time-section">
       <p class="time-label">Last cleaned</p>
       <p class="time-value">{{ elapsedDisplay }} ago</p>
-      <p class="time-exact">{{ (toilet.lastCleaned | date:'HH:mm – dd.MM.yyyy') }}</p>
+      <p class="time-exact">{{ toilet.lastCleaned | date:'HH:mm – dd.MM.yyyy' }}</p>
     </div>
 
-    <!-- Varoitusteksti -->
-    <div *ngIf="showWarning" class="warning-box">
-      {{ overTimeText }}
-    </div>
+    <div *ngIf="showWarning" class="warning-box">{{ overTimeText }}</div>
 
-    <!-- Nykyinen aika -->
     <div class="clock">{{ TimeNow | date:'HH:mm' }}</div>
 
+    <!-- Nollauspainike -->
+    <button class="btn-reset" (click)="openPinModal()">✅ Merkitse siivotuksi</button>
+
   </div>
+
+  <!-- PIN-modaali -->
+  <div class="pin-overlay" *ngIf="showPinModal" (click)="closePinModal()">
+    <div class="pin-modal" (click)="$event.stopPropagation()">
+      <h3>Syötä PIN-koodi</h3>
+      <p class="pin-sub">Vahvista siivous kirjautumalla</p>
+
+      <input
+        class="pin-input"
+        type="text"
+        placeholder="Käyttäjänimi"
+        [(ngModel)]="pinUsername"
+        autocomplete="username"
+      />
+      <input
+        class="pin-input"
+        type="password"
+        placeholder="PIN-koodi"
+        [(ngModel)]="pinCode"
+        inputmode="numeric"
+        maxlength="10"
+        autocomplete="current-password"
+      />
+
+      <div *ngIf="pinError" class="pin-error">{{ pinError }}</div>
+      <div *ngIf="pinSuccess" class="pin-success">{{ pinSuccess }}</div>
+
+      <button
+        class="pin-confirm"
+        (click)="submitPin()"
+        [disabled]="pinLoading || !pinUsername || pinCode.length < 4"
+      >
+        {{ pinLoading ? 'Vahvistetaan...' : 'Nollaa timer' }}
+      </button>
+      <button class="pin-cancel" (click)="closePinModal()">Peruuta</button>
+    </div>
+  </div>
+
 </div>
