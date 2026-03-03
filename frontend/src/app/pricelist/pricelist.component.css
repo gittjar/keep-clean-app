@@ -1,5 +1,376 @@
-.kortit, .card {
-    display: flex;
-    margin-left: 7%;
-    margin-top: 4%;
+/* ── HERO ── */
+.pricing-hero {
+  padding: 80px 16px 48px;
+  background: linear-gradient(135deg, #0d6efd11 0%, #ffffff 60%);
+}
+
+.pricing-badge {
+  display: inline-block;
+  background: #0d6efd1a;
+  color: #0d6efd;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  padding: 4px 14px;
+  margin-bottom: 16px;
+}
+
+.pricing-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.pricing-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── HERO SOFTWARE NOTE ── */
+.pricing-software-note {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: #6c757d;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 6px 16px;
+}
+
+/* ── HARDWARE NOTICE ── */
+.hardware-notice-bar {
+  background: #f0f5ff;
+  border-top: 1px solid #d0e0ff;
+  border-bottom: 1px solid #d0e0ff;
+  padding: 28px 16px;
+}
+
+.hw-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 280px;
+}
+
+.hw-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.hw-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  margin-bottom: 3px;
+}
+
+.hw-text {
+  font-size: 0.82rem;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.hw-disclaimer {
+  font-size: 0.72rem;
+  color: #adb5bd;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* ── BILLING TOGGLE ── */
+.billing-toggle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #6c757d;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-active {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+.toggle-switch {
+  width: 2.5em;
+  height: 1.3em;
+  cursor: pointer;
+}
+
+.discount-chip {
+  background: #198754;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 2px 7px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* ── CARDS SECTION ── */
+.pricing-cards-section {
+  padding: 40px 16px 60px;
+}
+
+.pricing-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 28px 28px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  border: 1.5px solid #e9ecef;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(13,110,253,0.13);
+}
+
+.pricing-card--featured {
+  border-color: #0d6efd;
+  background: linear-gradient(160deg, #0d6efd08, #ffffff 50%);
+  transform: scale(1.03);
+  box-shadow: 0 8px 40px rgba(13,110,253,0.18);
+}
+
+.pricing-card--featured:hover {
+  transform: scale(1.03) translateY(-6px);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #0d6efd, #6610f2);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 4px 16px;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(13,110,253,0.35);
+}
+
+.card-tier-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0d6efd;
+  margin-bottom: 4px;
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.price-amount {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1;
+}
+
+.price-currency {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+.price-period {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-left: 2px;
+}
+
+.price-desc {
+  font-size: 0.88rem;
+  color: #6c757d;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  flex: 1;
+}
+
+.feature-list li {
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.check {
+  color: #198754;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.muted-x {
+  color: #ced4da;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.btn-cta {
+  border-radius: 50px;
+  font-weight: 600;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  margin-top: auto;
+}
+
+.trial-note {
+  font-size: 0.75rem;
+  color: #adb5bd;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* ── COMPARISON TABLE ── */
+.comparison-section {
+  padding: 20px 16px 60px;
+}
+
+.comparison-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.comparison-table {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1.5px solid #e9ecef;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+}
+
+.comparison-table thead th {
+  background: #f8f9fa;
+  font-weight: 700;
+  color: #1a1a2e;
+  border-bottom: 2px solid #e9ecef;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+}
+
+.comparison-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.featured-col {
+  background: #0d6efd08;
+  font-weight: 600;
+  color: #0d6efd !important;
+}
+
+.feature-name {
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* ── FAQ ── */
+.faq-section {
+  padding: 20px 16px 60px;
+  max-width: 720px;
+}
+
+.faq-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.faq-item {
+  border: 1.5px solid #e9ecef;
+  border-radius: 12px !important;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.faq-button {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background: #fff;
+  box-shadow: none !important;
+}
+
+.faq-button:not(.collapsed) {
+  background: #f0f5ff;
+  color: #0d6efd;
+}
+
+.faq-answer {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.7;
+}
+
+/* ── CTA BOTTOM ── */
+.cta-bottom {
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  padding: 70px 16px;
+  color: #fff;
+}
+
+.cta-bottom h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.cta-bottom p {
+  opacity: 0.85;
+  font-size: 1.05rem;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 768px) {
+  .pricing-card--featured {
+    transform: none;
+  }
+  .pricing-card--featured:hover {
+    transform: translateY(-6px);
+  }
 }

@@ -1,53 +1,193 @@
-<section class="container">
+<!-- HERO -->
+<section class="pricing-hero text-center">
+  <div class="container">
+    <span class="pricing-badge">Hinnoittelu</span>
+    <h1 class="pricing-title">Yksinkertaista siisteyden seurantaa</h1>
+    <p class="pricing-subtitle">Valitse sopiva paketti yrityksesi kokolle. Ei piilokuluia, ei yllätyslaskuja.</p>
+    <p class="pricing-software-note">💡 Hinnoittelu kattaa <strong>ohjelmiston käytön</strong> — näyttölaitteet hankitaan erikseen.</p>
 
-<div class="card-deck mb-3 text-center kortit">
-    <div class="card mb-4 box-shadow">
-      <div class="card-header">
-        <h4 class="my-0 font-weight-normal">Small</h4>
+    <!-- Billing toggle -->
+    <div class="billing-toggle d-inline-flex align-items-center gap-3 mt-3">
+      <span [class.toggle-active]="!isAnnual" (click)="isAnnual = false">Kuukausittain</span>
+      <div class="form-check form-switch m-0">
+        <input class="form-check-input toggle-switch" type="checkbox"
+               [(ngModel)]="isAnnual" id="billingToggle">
+        <label class="form-check-label" for="billingToggle"></label>
       </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">1 € <small class="text-muted">/ reset</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>10 users included</li>
-          <li>2 GB of storage</li>
-          <li>Under 5 units</li>
-          <li>3 months free</li>
-          <li>Help center access</li>
-        </ul>
-        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+      <span [class.toggle-active]="isAnnual" (click)="isAnnual = true">
+        Vuosittain
+        <span class="discount-chip">-20%</span>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- HARDWARE NOTICE -->
+<div class="hardware-notice-bar">
+  <div class="container d-flex flex-wrap align-items-center justify-content-center gap-4">
+    <div class="hw-block">
+      <span class="hw-icon">📺</span>
+      <div>
+        <div class="hw-label">Näyttölaite — asiakkaan hankinta</div>
+        <div class="hw-text">Mikä tahansa verkkoselaimella varustettu näyttö käy: tabletti, Amazon Fire, Android-näyttö jne.</div>
       </div>
     </div>
-    <div class="card mb-4 box-shadow">
-      <div class="card-header">
-        <h4 class="my-0 font-weight-normal">Pro Account</h4>
-      </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">0,5 € <small class="text-muted">/ reset</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>20 users included</li>
-          <li>10 GB of storage</li>
-          <li>Under 25 units</li>
-          <li>3 months free</li>
-          <li>Help center access</li>
-        </ul>
-        <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button>
+    <div class="hw-block">
+      <span class="hw-icon">🔌</span>
+      <div>
+        <div class="hw-label">Asennus — asiakkaan vastuulla</div>
+        <div class="hw-text">Laite kiinnitetään ovipielen seinään. Voidaan toteuttaa omatoimisesti tai sähkömiehen avulla.</div>
       </div>
     </div>
-    <div class="card mb-4 box-shadow">
-      <div class="card-header">
-        <h4 class="my-0 font-weight-normal">Multiple High</h4>
-      </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">0,25 € <small class="text-muted">/ reset</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>100 users included</li>
-          <li>100 GB of storage</li>
-          <li>Phone and email support</li>
-          <li>Unlimited units</li>
-          <li>Help center access</li>
-        </ul>
-        <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
+    <div class="hw-block">
+      <span class="hw-icon">📶</span>
+      <div>
+        <div class="hw-label">Internet-yhteys — tarvitaan</div>
+        <div class="hw-text">WC-tilan lähellä tulee olla Wi-Fi tai mobiilidata näytön toimintaa varten.</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- PRICING CARDS -->
+<section class="container pricing-cards-section">
+  <div class="row justify-content-center g-4">
+
+    <!-- Starter -->
+    <div class="col-12 col-md-4">
+      <div class="pricing-card">
+        <div class="card-tier-label">Starter</div>
+        <div class="card-icon">🏢</div>
+        <div class="card-price">
+          <span class="price-amount">{{ isAnnual ? '19' : '24' }}</span>
+          <span class="price-currency">€</span>
+          <span class="price-period">/ kk</span>
+        </div>
+        <p class="price-desc">Sopii yksittäisille toimipisteille tai aloitteleville yrityksille.</p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Enintään <strong>5 WC-tilaa</strong></li>
+          <li><span class="check">✓</span> <strong>3 siivoojaa</strong> (PIN-koodi)</li>
+          <li><span class="check">✓</span> Reaaliaikainen näyttö</li>
+          <li><span class="check">✓</span> Ajastimen nollaus</li>
+          <li><span class="check">✓</span> Sähköpostituki</li>
+          <li><span class="muted-x">✗</span> Siivoushistoria</li>
+          <li><span class="muted-x">✗</span> Raportointi</li>
+          <li><span class="muted-x">✗</span> Mukautettu brändäys</li>
+        </ul>
+        <a routerLink="/login" class="btn btn-outline-primary w-100 btn-cta">Aloita ilmaiseksi</a>
+        <p class="trial-note">14 päivän kokeilujakso, ei vaadi korttia</p>
+        <p class="hw-disclaimer">* Ohjelmistomaksu vain. Näyttölaitteet eivät sisälly.</p>
+      </div>
+    </div>
+
+    <!-- Pro (featured) -->
+    <div class="col-12 col-md-4">
+      <div class="pricing-card pricing-card--featured">
+        <div class="popular-badge">⭐ Suosituin</div>
+        <div class="card-tier-label">Pro</div>
+        <div class="card-icon">🚀</div>
+        <div class="card-price">
+          <span class="price-amount">{{ isAnnual ? '49' : '62' }}</span>
+          <span class="price-currency">€</span>
+          <span class="price-period">/ kk</span>
+        </div>
+        <p class="price-desc">Täydellinen kasvavalle yritykselle, jolla on useita toimipisteitä.</p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Enintään <strong>25 WC-tilaa</strong></li>
+          <li><span class="check">✓</span> <strong>15 siivoojaa</strong> (PIN-koodi)</li>
+          <li><span class="check">✓</span> Reaaliaikainen näyttö</li>
+          <li><span class="check">✓</span> Ajastimen nollaus</li>
+          <li><span class="check">✓</span> Prioriteettituki</li>
+          <li><span class="check">✓</span> <strong>Siivoushistoria 90 pv</strong></li>
+          <li><span class="check">✓</span> <strong>Raportointi & CSV-vienti</strong></li>
+          <li><span class="muted-x">✗</span> Mukautettu brändäys</li>
+        </ul>
+        <a routerLink="/login" class="btn btn-primary w-100 btn-cta">Aloita Pro</a>
+        <p class="trial-note">14 päivän kokeilujakso, ei vaadi korttia</p>
+        <p class="hw-disclaimer">* Ohjelmistomaksu vain. Näyttölaitteet eivät sisälly.</p>
+      </div>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="col-12 col-md-4">
+      <div class="pricing-card">
+        <div class="card-tier-label">Enterprise</div>
+        <div class="card-icon">🏗️</div>
+        <div class="card-price">
+          <span class="price-amount">{{ isAnnual ? '119' : '149' }}</span>
+          <span class="price-currency">€</span>
+          <span class="price-period">/ kk</span>
+        </div>
+        <p class="price-desc">Suurille organisaatioille – rajattomat tilat, oma tuki ja brändäys.</p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> <strong>Rajattomat WC-tilat</strong></li>
+          <li><span class="check">✓</span> <strong>Rajattomat siivoojat</strong></li>
+          <li><span class="check">✓</span> Reaaliaikainen näyttö</li>
+          <li><span class="check">✓</span> Ajastimen nollaus</li>
+          <li><span class="check">✓</span> Puhelintuki 24/7</li>
+          <li><span class="check">✓</span> <strong>Siivoushistoria rajaton</strong></li>
+          <li><span class="check">✓</span> <strong>Raportointi & CSV-vienti</strong></li>
+          <li><span class="check">✓</span> <strong>Mukautettu brändäys & logo</strong></li>
+        </ul>
+        <a href="mailto:info@keepclean.fi" class="btn btn-outline-primary w-100 btn-cta">Pyydä tarjous</a>
+        <p class="trial-note">Räätälöity sopimus yrityksellesi</p>
+        <p class="hw-disclaimer">* Ohjelmistomaksu vain. Näyttölaitteet eivät sisälly.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURE COMPARISON TABLE -->
+<section class="container comparison-section">
+  <h2 class="text-center mb-4 comparison-title">Ominaisuusvertailu</h2>
+  <div class="table-responsive">
+    <table class="table comparison-table text-center">
+      <thead>
+        <tr>
+          <th class="text-start">Ominaisuus</th>
+          <th>Starter</th>
+          <th class="featured-col">Pro</th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of comparisonRows">
+          <td class="text-start feature-name">{{ row.name }}</td>
+          <td [innerHTML]="row.starter"></td>
+          <td class="featured-col" [innerHTML]="row.pro"></td>
+          <td [innerHTML]="row.enterprise"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="container faq-section">
+  <h2 class="text-center mb-4 faq-title">Usein kysytyt kysymykset</h2>
+  <div class="accordion" id="faqAccordion">
+    <div class="accordion-item faq-item" *ngFor="let faq of faqs; let i = index">
+      <h2 class="accordion-header">
+        <button class="accordion-button faq-button"
+                [class.collapsed]="openFaq !== i"
+                type="button"
+                (click)="toggleFaq(i)">
+          {{ faq.q }}
+        </button>
+      </h2>
+      <div class="accordion-collapse" [class.show]="openFaq === i">
+        <div class="accordion-body faq-answer">{{ faq.a }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-bottom text-center">
+  <div class="container">
+    <h2>Valmis aloittamaan?</h2>
+    <p>Rekisteröidy ilmaiseksi – ei sitoumuksia, ei luottokorttia.</p>
+    <a routerLink="/login" class="btn btn-light btn-lg px-5">Luo tili nyt</a>
   </div>
 </section>
