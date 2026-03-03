@@ -88,4 +88,11 @@ export class DashboardComponent implements OnInit {
   goToDisplay(toilet: Toilet) {
     this.router.navigate(['/display', toilet._id]);
   }
+
+  copyDisplayUrl(toilet: Toilet) {
+    const url = `${window.location.origin}/display/${toilet._id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert(`URL kopioitu:\n${url}`);
+    });
+  }
 }
