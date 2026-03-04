@@ -1,0 +1,119 @@
+<div class="admin-wrapper container-fluid py-4">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h2 class="mb-0">⚙️ Admin-paneeli</h2>
+      <small class="text-muted">Kirjautunut: {{ authService.getUsername() }} <span class="badge bg-danger ms-1">admin</span></small>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Kirjaudu ulos</button>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="activeTab === 'toilets'" (click)="activeTab = 'toilets'">
+        🚽 WC-tilat ({{ toilets.length }})
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+        👥 Käyttäjät ({{ users.length }})
+      </button>
+    </li>
+  </ul>
+
+  <!-- WC-tilat -->
+  <div *ngIf="activeTab === 'toilets'">
+    <div *ngIf="loadingToilets" class="text-center py-4">
+      <div class="spinner-border text-primary"></div>
+    </div>
+    <div *ngIf="!loadingToilets" class="table-responsive">
+      <table class="table table-hover admin-table align-middle">
+        <thead>
+          <tr>
+            <th>Nimi</th>
+            <th>Sijainti</th>
+            <th>Omistaja</th>
+            <th>Oikeudet</th>
+            <th>Luotu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let toilet of toilets">
+            <tr>
+              <td><strong>{{ toilet.name }}</strong><br><small class="text-muted">{{ toilet.toiletId }}</small></td>
+              <td>{{ toilet.location }}</td>
+              <td><span class="badge bg-primary">{{ toilet.owner?.username }}</span></td>
+              <td>
+                <div class="d-flex flex-wrap gap-1 mb-1">
+                  <span *ngFor="let u of toilet.allowedUsers" class="badge bg-secondary allowed-badge">
+                    {{ u.username }}
+                    <button class="btn-remove-badge" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">✕</button>
+                  </span>
+                  <span *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic">–</span>
+                </div>
+                <button class="btn btn-link btn-sm p-0 perms-link" (click)="togglePerms(toilet._id)">
+                  + Lisää oikeus
+                </button>
+                <div *ngIf="expandedPerms[toilet._id]" class="d-flex gap-2 mt-1">
+                  <select class="form-select form-select-sm grant-select" [(ngModel)]="grantUserIdMap[toilet._id]">
+                    <option value="">Valitse...</option>
+                    <option *ngFor="let u of getGrantableUsers(toilet)" [value]="u._id">{{ u.username }}</option>
+                  </select>
+                  <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)"
+                          [disabled]="!grantUserIdMap[toilet._id]">✓</button>
+                </div>
+              </td>
+              <td class="text-muted small">{{ formatDate(toilet.createdAt) }}</td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="toilets.length === 0">
+            <td colspan="5" class="text-center text-muted fst-italic">Ei WC-tiloja</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Käyttäjät -->
+  <div *ngIf="activeTab === 'users'">
+    <div *ngIf="loadingUsers" class="text-center py-4">
+      <div class="spinner-border text-primary"></div>
+    </div>
+    <div *ngIf="!loadingUsers" class="table-responsive">
+      <table class="table table-hover admin-table align-middle">
+        <thead>
+          <tr>
+            <th>Käyttäjänimi</th>
+            <th>Rooli</th>
+            <th>Luotu</th>
+            <th>Toiminto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td><strong>{{ user.username }}</strong></td>
+            <td>
+              <span class="badge" [class.bg-danger]="user.role === 'admin'" [class.bg-secondary]="user.role !== 'admin'">
+                {{ user.role }}
+              </span>
+            </td>
+            <td class="text-muted small">{{ formatDate(user.createdAt || '') }}</td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm"
+                      (click)="toggleRole(user)"
+                      [disabled]="user._id === authService.getUserId()">
+                {{ user.role === 'admin' ? '⬇ Tee user' : '⬆ Tee admin' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="4" class="text-center text-muted fst-italic">Ei käyttäjiä</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -21,12 +21,15 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ message: 'Käyttäjänimi on jo käytössä' });
     }
 
-    const user = new User({ username, pin });
+    const { adminCode } = req.body;
+
+    const role = adminCode && adminCode === process.env.ADMIN_CREATE_CODE ? 'admin' : 'user';
+    const user = new User({ username, pin, role });
     await user.save();
 
-    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.status(201).json({ token, username: user.username, userId: user._id });
+    res.status(201).json({ token, username: user.username, userId: user._id, role: user.role });
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ message: 'Rekisteröinti epäonnistui', error: err.message });
@@ -52,9 +55,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Väärä käyttäjänimi tai PIN' });
     }
 
-    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ token, username: user.username, userId: user._id });
+    res.json({ token, username: user.username, userId: user._id, role: user.role });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Kirjautuminen epäonnistui', error: err.message });

@@ -8,19 +8,35 @@ export interface CleaningEntry {
   cleanedBy: string;
 }
 
+export interface ToiletUser {
+  _id: string;
+  username: string;
+}
+
 export interface Toilet {
   _id: string;
   name: string;
   location: string;
   toiletId: string;
-  lastCleaned: string; // virtual: viimeisin cleanedAt tai createdAt
+  lastCleaned: string;
   cleaningLog: CleaningEntry[];
+  owner: ToiletUser;
+  allowedUsers: ToiletUser[];
   createdAt: string;
+}
+
+export interface AppUser {
+  _id: string;
+  username: string;
+  role: string;
+  createdAt?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ToiletService {
   private apiUrl = 'http://localhost:3001/api/toilets';
+  private usersUrl = 'http://localhost:3001/api/users';
+  private adminUrl = 'http://localhost:3001/api/admin';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -48,23 +64,46 @@ export class ToiletService {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 
-  // PIN-resetointi display-näytöltä (ei vaadi JWT-tokenia)
   pinReset(id: string, username: string, pin: string): Observable<{ message: string; lastCleaned: string; toilet: Toilet }> {
     return this.http.post<any>(`${this.apiUrl}/${id}/pin-reset`, { username, pin });
   }
 
-  // Hae yksittäinen WC-tila julkisesti (display-näyttö)
   getToiletPublic(id: string): Observable<Toilet> {
     return this.http.get<Toilet>(`${this.apiUrl}/${id}/public`);
   }
 
-  // Laske kuinka monta tuntia on kulunut lastCleaned-ajasta
+  // Oikeuksien hallinta
+  grantAccess(toiletId: string, userId: string): Observable<{ message: string; toilet: Toilet }> {
+    return this.http.post<any>(`${this.apiUrl}/${toiletId}/grant`, { userId }, { headers: this.getHeaders() });
+  }
+
+  revokeAccess(toiletId: string, targetUserId: string): Observable<{ message: string }> {
+    return this.http.delete<any>(`${this.apiUrl}/${toiletId}/revoke/${targetUserId}`, { headers: this.getHeaders() });
+  }
+
+  // Käyttäjät (kirjautuneen käyttäjän saatavilla)
+  getUsers(): Observable<AppUser[]> {
+    return this.http.get<AppUser[]>(this.usersUrl, { headers: this.getHeaders() });
+  }
+
+  // Admin-reitit
+  getAdminUsers(): Observable<AppUser[]> {
+    return this.http.get<AppUser[]>(`${this.adminUrl}/users`, { headers: this.getHeaders() });
+  }
+
+  getAdminToilets(): Observable<Toilet[]> {
+    return this.http.get<Toilet[]>(`${this.adminUrl}/toilets`, { headers: this.getHeaders() });
+  }
+
+  setUserRole(userId: string, role: string): Observable<AppUser> {
+    return this.http.put<AppUser>(`${this.adminUrl}/users/${userId}/role`, { role }, { headers: this.getHeaders() });
+  }
+
   getElapsedHours(lastCleaned: string): number {
     const ms = Date.now() - new Date(lastCleaned).getTime();
     return ms / (1000 * 60 * 60);
   }
 
-  // Muotoile kulunut aika luettavaksi tekstiksi
   formatElapsed(lastCleaned: string): string {
     const ms = Date.now() - new Date(lastCleaned).getTime();
     const minutes = Math.floor(ms / (1000 * 60));

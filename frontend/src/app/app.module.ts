@@ -16,6 +16,7 @@ import { MainpageComponent } from './mainpage/mainpage.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DisplayComponent } from './display/display.component';
+import { AdminComponent } from './admin/admin.component';
 
 
 
@@ -29,6 +30,7 @@ import { DisplayComponent } from './display/display.component';
     LoginComponent,
     DashboardComponent,
     DisplayComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,

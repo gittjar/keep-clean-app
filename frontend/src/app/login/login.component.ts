@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   username = '';
   pin = '';
+  adminCode = '';
   errorMsg = '';
   isRegister = false;
   loading = false;
@@ -22,11 +23,17 @@ export class LoginComponent {
     this.loading = true;
 
     const action$ = this.isRegister
-      ? this.authService.register(this.username, this.pin)
+      ? this.authService.register(this.username, this.pin, this.adminCode || undefined)
       : this.authService.login(this.username, this.pin);
 
     action$.subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: (res) => {
+        if (res.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
       error: (err) => {
         this.errorMsg = err.error?.message || 'Jokin meni pieleen';
         this.loading = false;
@@ -37,5 +44,6 @@ export class LoginComponent {
   toggleMode() {
     this.isRegister = !this.isRegister;
     this.errorMsg = '';
+    this.adminCode = '';
   }
 }

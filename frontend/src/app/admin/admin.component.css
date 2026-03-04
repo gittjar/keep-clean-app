@@ -1,0 +1,62 @@
+.admin-wrapper {
+  min-height: 100vh;
+  background: #f4f6f9;
+}
+
+.admin-table {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.admin-table thead th {
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  border: none;
+}
+
+.admin-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.allowed-badge {
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-remove-badge {
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.7;
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.btn-remove-badge:hover {
+  opacity: 1;
+}
+
+.perms-link {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.grant-select {
+  max-width: 180px;
+}

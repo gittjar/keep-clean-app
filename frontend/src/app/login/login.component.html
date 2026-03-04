@@ -34,6 +34,20 @@
         />
       </div>
 
+      <div *ngIf="isRegister" class="form-group mt-3">
+        <label for="adminCode">Admin-koodi <span class="text-muted">(valinnainen)</span></label>
+        <input
+          id="adminCode"
+          type="password"
+          class="form-control"
+          [(ngModel)]="adminCode"
+          name="adminCode"
+          placeholder="Jätä tyhjäksi tavalliselle käyttäjälle"
+          autocomplete="off"
+        />
+        <small class="text-muted">Anna admin-koodi saadaksesi ylimmän hallintatason.</small>
+      </div>
+
       <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
 
       <button

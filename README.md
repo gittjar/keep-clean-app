@@ -6,3 +6,7 @@ This webapp is for Helsinki Business College DemoSession (spring/2023).
 
 Created and designed: Jarno .NET22S
 
+Start up commands:
+- frontend/ng s -o
+- backend/npm run dev
+

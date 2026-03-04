@@ -14,19 +14,22 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 4,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-// Hajautetaan PIN ennen tallennusta
 userSchema.pre('save', async function () {
   if (!this.isModified('pin')) return;
   this.pin = await bcrypt.hash(this.pin, 10);
 });
 
-// Vertaa syötettyä PIN-koodia hajautettuun
 userSchema.methods.comparePin = async function (inputPin) {
   return bcrypt.compare(inputPin, this.pin);
 };

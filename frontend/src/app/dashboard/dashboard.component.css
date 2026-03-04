@@ -13,6 +13,20 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.13);
 }
 
+.shared-card {
+  border-left: 3px solid #6c757d;
+  background: #fafafa;
+}
+
+.shared-badge {
+  font-size: 0.7rem;
+}
+
+.owner-label {
+  font-size: 0.82rem;
+  color: #6c757d;
+}
+
 .border-dashed {
   border: 2px dashed #ccc !important;
 }
@@ -24,9 +38,7 @@
   color: #6c757d !important;
 }
 
-.history-toggle:hover {
-  color: #0d6efd !important;
-}
+.history-toggle:hover { color: #0d6efd !important; }
 
 .toggle-arrow {
   font-size: 0.7rem;
@@ -51,16 +63,43 @@
   font-size: 0.82rem;
 }
 
-.history-entry:last-child {
-  border-bottom: none;
+.history-entry:last-child { border-bottom: none; }
+
+.history-who { font-weight: 600; color: #333; }
+
+.history-when { color: #6c757d; font-size: 0.78rem; }
+
+/* Oikeuksien hallinta */
+.perms-toggle {
+  font-size: 0.82rem;
+  text-decoration: none;
+  color: #0d6efd !important;
 }
 
-.history-who {
-  font-weight: 600;
-  color: #333;
+.perms-toggle:hover { color: #0a58ca !important; }
+
+.perms-panel {
+  background: #f0f5ff;
+  border-left: 3px solid #0d6efd88;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 10px;
 }
 
-.history-when {
-  color: #6c757d;
-  font-size: 0.78rem;
+.perm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #dee2e6;
 }
+
+.perm-row:last-child { border-bottom: none; }
+
+.btn-xs {
+  padding: 1px 6px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  border-radius: 4px;
+}
+
