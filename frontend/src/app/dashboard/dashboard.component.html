@@ -1,7 +1,7 @@
 ﻿<div class="dashboard-wrapper container-fluid py-4">
   <div class="d-flex align-items-center justify-content-between mb-4">
     <div>
-      <h2 class="mb-0">Keep Clean â€“ Hallintapaneeli</h2>
+      <h2 class="mb-0">Keep Clean – Hallintapaneeli</h2>
       <small class="text-muted">Kirjautunut: {{ username }}</small>
     </div>
     <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Kirjaudu ulos</button>
@@ -22,12 +22,12 @@
             <!-- Otsikkorivi -->
             <div class="d-flex justify-content-between align-items-start mb-1">
               <h5 class="card-title mb-0">{{ toilet.name }}</h5>
-              <span *ngIf="!isOwner(toilet)" class="badge bg-secondary shared-badge">ðŸ“Œ Jaettu</span>
+              <span *ngIf="!isOwner(toilet)" class="badge bg-secondary shared-badge">&#128204; Jaettu</span>
             </div>
             <p class="card-text text-muted mb-1">{{ toilet.location }}</p>
             <p class="card-text text-muted mb-1" *ngIf="toilet.toiletId">ID: {{ toilet.toiletId }}</p>
             <p *ngIf="!isOwner(toilet)" class="owner-label mb-2">
-              ðŸ‘¤ Omistaja: <strong>{{ toilet.owner?.username }}</strong>
+              &#128100; Omistaja: <strong>{{ toilet.owner?.username }}</strong>
             </p>
 
             <span class="badge bg-info text-dark mb-2">Siivottu: {{ getElapsed(toilet.lastCleaned) }}</span>
@@ -36,8 +36,8 @@
             <div class="mb-2">
               <button class="btn btn-link btn-sm p-0 text-secondary history-toggle"
                       (click)="toggleHistory(toilet._id)">
-                ðŸ“‹ Historia ({{ toilet.cleaningLog.length || 0 }})
-                <span class="toggle-arrow">{{ expandedHistory[toilet._id] ? 'â–²' : 'â–¼' }}</span>
+                &#128203; Historia ({{ toilet.cleaningLog.length || 0 }})
+                <span class="toggle-arrow">{{ expandedHistory[toilet._id] ? '&#9650;' : '&#9660;' }}</span>
               </button>
               <div *ngIf="expandedHistory[toilet._id]" class="cleaning-history mt-2">
                 <div *ngIf="!toilet.cleaningLog.length" class="text-muted small fst-italic">
@@ -45,54 +45,54 @@
                 </div>
                 <ul class="list-unstyled mb-0">
                   <li *ngFor="let entry of getRecentHistory(toilet)" class="history-entry">
-                    <span class="history-who">ðŸ§¹ {{ entry.cleanedBy }}</span>
+                    <span class="history-who">&#129529; {{ entry.cleanedBy }}</span>
                     <span class="history-when">{{ formatDate(entry.cleanedAt) }}</span>
                   </li>
                 </ul>
               </div>
             </div>
 
-            <!-- Oikeuksien hallinta â€“ vain omistajalle -->
+            <!-- Oikeuksien hallinta - vain omistajalle -->
             <div *ngIf="isOwner(toilet)" class="mb-3">
               <button class="btn btn-link btn-sm p-0 perms-toggle"
                       (click)="togglePermissions(toilet._id)">
-                ðŸ”‘ Oikeudet ({{ toilet.allowedUsers.length }})
-                <span class="toggle-arrow">{{ expandedPermissions[toilet._id] ? 'â–²' : 'â–¼' }}</span>
+                &#128273; Oikeudet ({{ toilet.allowedUsers.length }})
+                <span class="toggle-arrow">{{ expandedPermissions[toilet._id] ? '&#9650;' : '&#9660;' }}</span>
               </button>
               <div *ngIf="expandedPermissions[toilet._id]" class="perms-panel mt-2">
                 <div *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic mb-2">
                   Ei jaettuja oikeuksia
                 </div>
                 <div *ngFor="let u of toilet.allowedUsers" class="perm-row">
-                  <span>ðŸ‘¤ {{ u.username }}</span>
-                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">âœ•</button>
+                  <span>&#128100; {{ u.username }}</span>
+                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">&#x2715;</button>
                 </div>
                 <div class="d-flex gap-2 mt-2" *ngIf="getGrantableUsers(toilet).length > 0">
                   <select class="form-select form-select-sm" [(ngModel)]="grantUserIdMap[toilet._id]">
-                    <option value="">Valitse kÃ¤yttÃ¤jÃ¤...</option>
+                    <option value="">Valitse kayttaja...</option>
                     <option *ngFor="let u of getGrantableUsers(toilet)" [value]="u._id">{{ u.username }}</option>
                   </select>
                   <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)"
                           [disabled]="!grantUserIdMap[toilet._id]">+</button>
                 </div>
                 <p *ngIf="getGrantableUsers(toilet).length === 0 && toilet.allowedUsers.length > 0"
-                   class="text-muted small fst-italic mt-1 mb-0">Kaikille kÃ¤yttÃ¤jille on jo myÃ¶nnetty oikeus.</p>
+                   class="text-muted small fst-italic mt-1 mb-0">Kaikille kayttajille on jo myonnetty oikeus.</p>
               </div>
             </div>
 
             <!-- Toimintopainikkeet -->
             <div class="d-flex gap-2 flex-wrap">
               <button class="btn btn-success btn-sm" (click)="resetTimer(toilet)">
-                âœ… Nollaa timer
+                &#9989; Nollaa timer
               </button>
               <button class="btn btn-outline-primary btn-sm" (click)="goToDisplay(toilet)">
-                ðŸ–¥ NÃ¤yttÃ¶
+                &#128421; Naytto
               </button>
-              <button class="btn btn-outline-secondary btn-sm" (click)="copyDisplayUrl(toilet)" title="Kopioi nÃ¤ytÃ¶n URL">
-                ðŸ“‹ Kopioi URL
+              <button class="btn btn-outline-secondary btn-sm" (click)="copyDisplayUrl(toilet)" title="Kopioi nayton URL">
+                &#128203; Kopioi URL
               </button>
               <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger btn-sm" (click)="deleteToilet(toilet._id)">
-                ðŸ—‘ Poista
+                &#128465; Poista
               </button>
             </div>
 
@@ -103,15 +103,15 @@
       <div class="col-md-4" *ngIf="toilets.length === 0 && !showAddForm">
         <div class="card h-100 border-dashed">
           <div class="card-body text-center text-muted d-flex align-items-center justify-content-center">
-            <p>Ei WC-tiloja vielÃ¤. LisÃ¤Ã¤ ensimmÃ¤inen!</p>
+            <p>Ei WC-tiloja viela. Lisaa ensimmainen!</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- LisÃ¤Ã¤ uusi WC-tila -->
+    <!-- Lisaa uusi WC-tila -->
     <button class="btn btn-primary mb-3" (click)="showAddForm = !showAddForm">
-      {{ showAddForm ? 'âœ• Peruuta' : '+ LisÃ¤Ã¤ WC-tila' }}
+      {{ showAddForm ? '&#x2715; Peruuta' : '+ Lisaa WC-tila' }}
     </button>
 
     <div *ngIf="showAddForm" class="card p-3 mb-4" style="max-width: 480px;">
@@ -127,3 +127,10 @@
       <div class="mb-3">
         <label class="form-label">Tilan ID (valinnainen)</label>
         <input type="text" class="form-control" [(ngModel)]="newToiletId" placeholder="esim. 1.44" />
+      </div>
+      <button class="btn btn-success" (click)="addToilet()" [disabled]="adding || !newName || !newLocation">
+        {{ adding ? 'Lisataan...' : 'Lisaa' }}
+      </button>
+    </div>
+  </div>
+</div>
