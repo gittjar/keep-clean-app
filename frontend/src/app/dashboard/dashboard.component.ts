@@ -2,6 +2,11 @@
 import { Router } from '@angular/router';
 import { ToiletService, Toilet, CleaningEntry, AppUser } from '../services/toilet.service';
 import { AuthService } from '../services/auth.service';
+import {
+  faRightFromBracket, faShareNodes, faUser, faClockRotateLeft,
+  faChevronUp, faChevronDown, faBroom, faKey, faXmark, faPlus,
+  faCircleCheck, faDisplay, faCopy, faTrash, faCheck, faUserShield
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: false,
@@ -27,6 +32,29 @@ export class DashboardComponent implements OnInit {
   expandedHistory: { [id: string]: boolean } = {};
   expandedPermissions: { [id: string]: boolean } = {};
   grantUserIdMap: { [id: string]: string } = {};
+
+  toastMsg = '';
+  toastUrl = '';
+  toastVisible = false;
+  private toastTimer: any;
+
+  // FontAwesome icons
+  faRightFromBracket = faRightFromBracket;
+  faShareNodes = faShareNodes;
+  faUser = faUser;
+  faClockRotateLeft = faClockRotateLeft;
+  faChevronUp = faChevronUp;
+  faChevronDown = faChevronDown;
+  faBroom = faBroom;
+  faKey = faKey;
+  faXmark = faXmark;
+  faPlus = faPlus;
+  faCircleCheck = faCircleCheck;
+  faDisplay = faDisplay;
+  faCopy = faCopy;
+  faTrash = faTrash;
+  faCheck = faCheck;
+  faUserShield = faUserShield;
 
   constructor(
     private toiletService: ToiletService,
@@ -151,7 +179,15 @@ export class DashboardComponent implements OnInit {
   copyDisplayUrl(toilet: Toilet) {
     const url = `${window.location.origin}/display/${toilet._id}`;
     navigator.clipboard.writeText(url).then(() => {
-      alert(`URL kopioitu:\n${url}`);
+      this.showToastMsg('URL kopioitu leikepöydälle!', url);
     });
+  }
+
+  showToastMsg(msg: string, url = '') {
+    this.toastMsg = msg;
+    this.toastUrl = url;
+    this.toastVisible = true;
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.toastVisible = false, 3500);
   }
 }

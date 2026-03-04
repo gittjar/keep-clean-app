@@ -103,3 +103,51 @@
   border-radius: 4px;
 }
 
+/* URL-kopiointi toast */
+.copy-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1e2a3a;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 90vw;
+}
+
+.copy-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.toast-icon {
+  margin-top: 2px;
+  color: #4ade80;
+}
+
+.toast-content {
+  min-width: 0;
+}
+
+.toast-msg {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.toast-url {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  word-break: break-all;
+}
+

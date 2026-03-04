@@ -1,10 +1,12 @@
 ﻿<div class="dashboard-wrapper container-fluid py-4">
   <div class="d-flex align-items-center justify-content-between mb-4">
     <div>
-      <h2 class="mb-0">Keep Clean – Hallintapaneeli</h2>
+      <h2 class="mb-0">Keep Clean &ndash; Hallintapaneeli</h2>
       <small class="text-muted">Kirjautunut: {{ username }}</small>
     </div>
-    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Kirjaudu ulos</button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">
+      <fa-icon [icon]="faRightFromBracket" class="me-1"></fa-icon>Kirjaudu ulos
+    </button>
   </div>
 
   <div *ngIf="loading" class="text-center py-5">
@@ -22,12 +24,14 @@
             <!-- Otsikkorivi -->
             <div class="d-flex justify-content-between align-items-start mb-1">
               <h5 class="card-title mb-0">{{ toilet.name }}</h5>
-              <span *ngIf="!isOwner(toilet)" class="badge bg-secondary shared-badge">&#128204; Jaettu</span>
+              <span *ngIf="!isOwner(toilet)" class="badge bg-secondary shared-badge">
+                <fa-icon [icon]="faShareNodes" class="me-1"></fa-icon>Jaettu
+              </span>
             </div>
             <p class="card-text text-muted mb-1">{{ toilet.location }}</p>
             <p class="card-text text-muted mb-1" *ngIf="toilet.toiletId">ID: {{ toilet.toiletId }}</p>
             <p *ngIf="!isOwner(toilet)" class="owner-label mb-2">
-              &#128100; Omistaja: <strong>{{ toilet.owner?.username }}</strong>
+              <fa-icon [icon]="faUser" class="me-1"></fa-icon>Omistaja: <strong>{{ toilet.owner?.username }}</strong>
             </p>
 
             <span class="badge bg-info text-dark mb-2">Siivottu: {{ getElapsed(toilet.lastCleaned) }}</span>
@@ -36,8 +40,8 @@
             <div class="mb-2">
               <button class="btn btn-link btn-sm p-0 text-secondary history-toggle"
                       (click)="toggleHistory(toilet._id)">
-                &#128203; Historia ({{ toilet.cleaningLog.length || 0 }})
-                <span class="toggle-arrow">{{ expandedHistory[toilet._id] ? '&#9650;' : '&#9660;' }}</span>
+                <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>Historia ({{ toilet.cleaningLog.length || 0 }})
+                <fa-icon [icon]="expandedHistory[toilet._id] ? faChevronUp : faChevronDown" class="ms-1 toggle-arrow"></fa-icon>
               </button>
               <div *ngIf="expandedHistory[toilet._id]" class="cleaning-history mt-2">
                 <div *ngIf="!toilet.cleaningLog.length" class="text-muted small fst-italic">
@@ -45,7 +49,7 @@
                 </div>
                 <ul class="list-unstyled mb-0">
                   <li *ngFor="let entry of getRecentHistory(toilet)" class="history-entry">
-                    <span class="history-who">&#129529; {{ entry.cleanedBy }}</span>
+                    <span class="history-who"><fa-icon [icon]="faBroom" class="me-1"></fa-icon>{{ entry.cleanedBy }}</span>
                     <span class="history-when">{{ formatDate(entry.cleanedAt) }}</span>
                   </li>
                 </ul>
@@ -56,16 +60,18 @@
             <div *ngIf="isOwner(toilet)" class="mb-3">
               <button class="btn btn-link btn-sm p-0 perms-toggle"
                       (click)="togglePermissions(toilet._id)">
-                &#128273; Oikeudet ({{ toilet.allowedUsers.length }})
-                <span class="toggle-arrow">{{ expandedPermissions[toilet._id] ? '&#9650;' : '&#9660;' }}</span>
+                <fa-icon [icon]="faKey" class="me-1"></fa-icon>Oikeudet ({{ toilet.allowedUsers.length }})
+                <fa-icon [icon]="expandedPermissions[toilet._id] ? faChevronUp : faChevronDown" class="ms-1 toggle-arrow"></fa-icon>
               </button>
               <div *ngIf="expandedPermissions[toilet._id]" class="perms-panel mt-2">
                 <div *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic mb-2">
                   Ei jaettuja oikeuksia
                 </div>
                 <div *ngFor="let u of toilet.allowedUsers" class="perm-row">
-                  <span>&#128100; {{ u.username }}</span>
-                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">&#x2715;</button>
+                  <span><fa-icon [icon]="faUser" class="me-1"></fa-icon>{{ u.username }}</span>
+                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">
+                    <fa-icon [icon]="faXmark"></fa-icon>
+                  </button>
                 </div>
                 <div class="d-flex gap-2 mt-2" *ngIf="getGrantableUsers(toilet).length > 0">
                   <select class="form-select form-select-sm" [(ngModel)]="grantUserIdMap[toilet._id]">
@@ -73,7 +79,9 @@
                     <option *ngFor="let u of getGrantableUsers(toilet)" [value]="u._id">{{ u.username }}</option>
                   </select>
                   <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)"
-                          [disabled]="!grantUserIdMap[toilet._id]">+</button>
+                          [disabled]="!grantUserIdMap[toilet._id]">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
                 </div>
                 <p *ngIf="getGrantableUsers(toilet).length === 0 && toilet.allowedUsers.length > 0"
                    class="text-muted small fst-italic mt-1 mb-0">Kaikille kayttajille on jo myonnetty oikeus.</p>
@@ -83,16 +91,16 @@
             <!-- Toimintopainikkeet -->
             <div class="d-flex gap-2 flex-wrap">
               <button class="btn btn-success btn-sm" (click)="resetTimer(toilet)">
-                &#9989; Nollaa timer
+                <fa-icon [icon]="faCircleCheck" class="me-1"></fa-icon>Nollaa timer
               </button>
               <button class="btn btn-outline-primary btn-sm" (click)="goToDisplay(toilet)">
-                &#128421; Naytto
+                <fa-icon [icon]="faDisplay" class="me-1"></fa-icon>Naytto
               </button>
               <button class="btn btn-outline-secondary btn-sm" (click)="copyDisplayUrl(toilet)" title="Kopioi nayton URL">
-                &#128203; Kopioi URL
+                <fa-icon [icon]="faCopy" class="me-1"></fa-icon>Kopioi URL
               </button>
               <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger btn-sm" (click)="deleteToilet(toilet._id)">
-                &#128465; Poista
+                <fa-icon [icon]="faTrash" class="me-1"></fa-icon>Poista
               </button>
             </div>
 
@@ -111,7 +119,7 @@
 
     <!-- Lisaa uusi WC-tila -->
     <button class="btn btn-primary mb-3" (click)="showAddForm = !showAddForm">
-      {{ showAddForm ? '&#x2715; Peruuta' : '+ Lisaa WC-tila' }}
+      <fa-icon [icon]="showAddForm ? faXmark : faPlus" class="me-1"></fa-icon>{{ showAddForm ? 'Peruuta' : 'Lisaa WC-tila' }}
     </button>
 
     <div *ngIf="showAddForm" class="card p-3 mb-4" style="max-width: 480px;">
@@ -129,8 +137,17 @@
         <input type="text" class="form-control" [(ngModel)]="newToiletId" placeholder="esim. 1.44" />
       </div>
       <button class="btn btn-success" (click)="addToilet()" [disabled]="adding || !newName || !newLocation">
-        {{ adding ? 'Lisataan...' : 'Lisaa' }}
+        <fa-icon [icon]="faPlus" class="me-1"></fa-icon>{{ adding ? 'Lisataan...' : 'Lisaa' }}
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Toast-ilmoitus -->
+<div class="copy-toast" [class.visible]="toastVisible">
+  <fa-icon [icon]="faCheck" class="me-2 toast-icon"></fa-icon>
+  <div class="toast-content">
+    <div class="toast-msg">{{ toastMsg }}</div>
+    <div class="toast-url" *ngIf="toastUrl">{{ toastUrl }}</div>
   </div>
 </div>
