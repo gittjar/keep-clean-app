@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
     const user = new User({ username, pin });
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({ token, username: user.username, userId: user._id });
   } catch (err) {
@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Väärä käyttäjänimi tai PIN' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({ token, username: user.username, userId: user._id });
   } catch (err) {

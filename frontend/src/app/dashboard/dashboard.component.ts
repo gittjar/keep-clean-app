@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToiletService, Toilet } from '../services/toilet.service';
+import { ToiletService, Toilet, CleaningEntry } from '../services/toilet.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   showAddForm = false;
 
   username: string | null = null;
+  expandedHistory: { [id: string]: boolean } = {};
 
   constructor(
     private toiletService: ToiletService,
@@ -62,6 +63,7 @@ export class DashboardComponent implements OnInit {
     this.toiletService.resetTimer(toilet._id).subscribe({
       next: (res) => {
         toilet.lastCleaned = res.lastCleaned;
+        toilet.cleaningLog = res.toilet.cleaningLog;
       }
     });
   }
@@ -74,10 +76,22 @@ export class DashboardComponent implements OnInit {
   }
 
   getElapsed(lastCleaned: string): string {
-    const totalMinutes = Math.floor(this.toiletService.getElapsedHours(lastCleaned) * 60);
-    const h = Math.floor(totalMinutes / 60);
-    const m = totalMinutes % 60;
-    return `${h}h ${m}min sitten`;
+    return this.toiletService.formatElapsed(lastCleaned);
+  }
+
+  toggleHistory(id: string) {
+    this.expandedHistory[id] = !this.expandedHistory[id];
+  }
+
+  getRecentHistory(toilet: Toilet): CleaningEntry[] {
+    return [...(toilet.cleaningLog || [])].reverse().slice(0, 15);
+  }
+
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleString('fi-FI', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
   }
 
   logout() {

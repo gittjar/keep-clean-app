@@ -28,7 +28,7 @@ router.post('/:id/pin-reset', async (req, res) => {
       return res.status(401).json({ message: 'Väärä käyttäjänimi tai PIN' });
     }
 
-    toilet.lastCleaned = new Date();
+    toilet.cleaningLog.push({ cleanedAt: new Date(), cleanedBy: owner.username });
     await toilet.save();
 
     res.json({ message: 'Timer nollattu', lastCleaned: toilet.lastCleaned, toilet });
@@ -76,7 +76,6 @@ router.post('/', async (req, res) => {
       location,
       toiletId: toiletId || '',
       owner: req.userId,
-      lastCleaned: new Date(),
     });
 
     await toilet.save();
@@ -95,7 +94,7 @@ router.put('/:id/reset', async (req, res) => {
       return res.status(404).json({ message: 'WC-tilaa ei löydy' });
     }
 
-    toilet.lastCleaned = new Date();
+    toilet.cleaningLog.push({ cleanedAt: new Date(), cleanedBy: req.username });
     await toilet.save();
 
     res.json({ message: 'Timer nollattu', lastCleaned: toilet.lastCleaned, toilet });

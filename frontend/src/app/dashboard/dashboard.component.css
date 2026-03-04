@@ -16,3 +16,51 @@
 .border-dashed {
   border: 2px dashed #ccc !important;
 }
+
+/* Siivoushistoria */
+.history-toggle {
+  font-size: 0.82rem;
+  text-decoration: none;
+  color: #6c757d !important;
+}
+
+.history-toggle:hover {
+  color: #0d6efd !important;
+}
+
+.toggle-arrow {
+  font-size: 0.7rem;
+  margin-left: 3px;
+}
+
+.cleaning-history {
+  background: #f8f9fa;
+  border-left: 3px solid #0d6efd44;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.history-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 0.82rem;
+}
+
+.history-entry:last-child {
+  border-bottom: none;
+}
+
+.history-who {
+  font-weight: 600;
+  color: #333;
+}
+
+.history-when {
+  color: #6c757d;
+  font-size: 0.78rem;
+}

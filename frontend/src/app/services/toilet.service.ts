@@ -3,12 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+export interface CleaningEntry {
+  cleanedAt: string;
+  cleanedBy: string;
+}
+
 export interface Toilet {
   _id: string;
   name: string;
   location: string;
   toiletId: string;
-  lastCleaned: string; // ISO date string
+  lastCleaned: string; // virtual: viimeisin cleanedAt tai createdAt
+  cleaningLog: CleaningEntry[];
   createdAt: string;
 }
 
@@ -56,5 +62,35 @@ export class ToiletService {
   getElapsedHours(lastCleaned: string): number {
     const ms = Date.now() - new Date(lastCleaned).getTime();
     return ms / (1000 * 60 * 60);
+  }
+
+  // Muotoile kulunut aika luettavaksi tekstiksi
+  formatElapsed(lastCleaned: string): string {
+    const ms = Date.now() - new Date(lastCleaned).getTime();
+    const minutes = Math.floor(ms / (1000 * 60));
+    const hours   = Math.floor(ms / (1000 * 60 * 60));
+    const days    = Math.floor(ms / (1000 * 60 * 60 * 24));
+    const weeks   = Math.floor(days / 7);
+    const months  = Math.floor(days / 30.44);
+    const years   = Math.floor(days / 365.25);
+
+    if (minutes < 60) {
+      return `${minutes} min`;
+    } else if (hours < 24) {
+      const m = minutes % 60;
+      return m > 0 ? `${hours}h ${m}min` : `${hours}h`;
+    } else if (days < 7) {
+      const h = hours % 24;
+      return h > 0 ? `${days}pv ${h}h` : `${days}pv`;
+    } else if (days < 30) {
+      const d = days % 7;
+      return d > 0 ? `${weeks}vk ${d}pv` : `${weeks}vk`;
+    } else if (months < 12) {
+      const w = Math.floor((days - months * 30.44) / 7);
+      return w > 0 ? `${months}kk ${Math.round(w)}vk` : `${months}kk`;
+    } else {
+      const m = months % 12;
+      return m > 0 ? `${years}v ${m}kk` : `${years}v`;
+    }
   }
 }

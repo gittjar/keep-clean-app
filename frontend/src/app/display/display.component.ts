@@ -98,10 +98,8 @@ export class DisplayComponent implements OnInit, OnDestroy {
   }
 
   get elapsedDisplay(): string {
-    const totalMinutes = Math.floor(this.elapsedHours * 60);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    return `${hours}h ${minutes}min`;
+    if (!this.toilet) return '';
+    return this.toiletService.formatElapsed(this.toilet.lastCleaned);
   }
 
   openPinModal() {

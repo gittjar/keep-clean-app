@@ -1,38 +1,29 @@
 import mongoose from 'mongoose';
 
-const toiletSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const cleaningEntrySchema = new mongoose.Schema(
+  {
+    cleanedAt: { type: Date, default: Date.now },
+    cleanedBy: { type: String, required: true },
   },
-  location: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  toiletId: {
-    type: String,
-    trim: true,
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  lastCleaned: {
-    type: Date,
-    default: Date.now,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { _id: false }
+);
 
-// Virtuaalikenttä: aika siivottu (ms) - lasketaan reaaliajassa
-toiletSchema.virtual('timeSinceCleaned').get(function () {
-  return Date.now() - this.lastCleaned.getTime();
+const toiletSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    location: { type: String, required: true, trim: true },
+    toiletId: { type: String, trim: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    cleaningLog: { type: [cleaningEntrySchema], default: [] },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
+
+// Virtuaali: viimeisin siivousaika (taaksepäinyhteensopiva lastCleaned)
+toiletSchema.virtual('lastCleaned').get(function () {
+  if (this.cleaningLog.length === 0) return this.createdAt;
+  return this.cleaningLog[this.cleaningLog.length - 1].cleanedAt;
 });
 
 export default mongoose.model('Toilet', toiletSchema);

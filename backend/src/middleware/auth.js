@@ -12,6 +12,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
+    req.username = decoded.username;
     next();
   } catch {
     return res.status(401).json({ message: 'Virheellinen tai vanhentunut token' });
