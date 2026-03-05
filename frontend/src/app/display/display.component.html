@@ -1,3 +1,12 @@
+<!-- ============================================================
+     Julkinen näyttötila (DisplayComponent)
+     URL: /display/:id  — ei vaadi kirjautumista
+     Rakenne:
+       - Lataustila / virheilmoitus
+       - Pääsisältö: tilaympyrä, ajanlasku, varoitus, nollauspainike
+       - Siivoushistoria-paneeli (oikealla / mobiilissa liu'utettava)
+       - PIN-vahvistusmodaali
+============================================================ -->
 <div class="display-wrapper" [style.background]="color2">
 
   <div *ngIf="loading" class="text-center py-5">

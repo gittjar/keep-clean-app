@@ -1,5 +1,11 @@
+<!-- ============================================================
+     Kirjautumis- / rekisteröitymislomake (LoginComponent)
+     isRegister-lippu vaihtaa kirjautumisen ja rekisteröinnin välillä.
+     Admin-koodi on valinnainen — jätetty tyhjäksi = tavallinen käyttäjä.
+============================================================ -->
 <div class="login-wrapper">
   <div class="login-card">
+    <!-- Otsikko vaihtuu tilan mukaan -->
     <h2>{{ isRegister ? 'Luo käyttäjä' : 'Kirjaudu sisään' }}</h2>
     <p class="subtitle">Keep Clean Admin</p>
 
@@ -34,6 +40,7 @@
         />
       </div>
 
+      <!-- Admin-koodi — näytetään vain rekisteröitymistilassa -->
       <div *ngIf="isRegister" class="form-group mt-3">
         <label for="adminCode">Admin-koodi <span class="text-muted">(valinnainen)</span></label>
         <input
@@ -48,6 +55,7 @@
         <small class="text-muted">Anna admin-koodi saadaksesi ylimmän hallintatason.</small>
       </div>
 
+      <!-- Virheilmoitus kirjautumisesta -->
       <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
 
       <button
@@ -61,6 +69,7 @@
 
     <hr />
 
+    <!-- Vaihda kirjautumis- ja rekisteröitymistilan välillä -->
     <button class="btn btn-link w-100" (click)="toggleMode()">
       {{ isRegister ? 'Minulla on jo käyttäjä – kirjaudu' : 'Luo uusi käyttäjä' }}
     </button>

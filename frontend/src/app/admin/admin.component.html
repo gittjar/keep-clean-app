@@ -1,29 +1,34 @@
+<!-- ============================================================
+     Admin-paneeli (AdminComponent)
+     Vain admin-roolille (suojattu AdminGuard-reittivahtialla).
+     Välilehdet: WC-tilat | Käyttäjät
+============================================================ -->
 <div class="admin-wrapper container-fluid py-4">
 
-  <!-- Header -->
+  <!-- Otsikko + kirjaudu ulos -->
   <div class="d-flex align-items-center justify-content-between mb-4">
     <div>
-      <h2 class="mb-0">⚙️ Admin-paneeli</h2>
+      <h2 class="mb-0">Admin-paneeli</h2>
       <small class="text-muted">Kirjautunut: {{ authService.getUsername() }} <span class="badge bg-danger ms-1">admin</span></small>
     </div>
     <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Kirjaudu ulos</button>
   </div>
 
-  <!-- Tabs -->
+  <!-- Välilehtinavigointi -->
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'toilets'" (click)="activeTab = 'toilets'">
-        🚽 WC-tilat ({{ toilets.length }})
+        WC-tilat ({{ toilets.length }})
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
-        👥 Käyttäjät ({{ users.length }})
+        Käyttäjät ({{ users.length }})
       </button>
     </li>
   </ul>
 
-  <!-- WC-tilat -->
+  <!-- ============ WC-TILAT-VÄLILEHTI ============ -->
   <div *ngIf="activeTab === 'toilets'">
     <div *ngIf="loadingToilets" class="text-center py-4">
       <div class="spinner-border text-primary"></div>
@@ -76,7 +81,7 @@
     </div>
   </div>
 
-  <!-- Käyttäjät -->
+  <!-- ============ KÄYTTÄJÄT-VÄLILEHTI ============ -->
   <div *ngIf="activeTab === 'users'">
     <div *ngIf="loadingUsers" class="text-center py-4">
       <div class="spinner-border text-primary"></div>

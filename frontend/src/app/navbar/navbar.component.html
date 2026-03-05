@@ -1,12 +1,23 @@
+<!-- ============================================================
+     Navigaatiopalkki
+     Julkiset linkit: Etusivu, Hinnat
+     Kirjautuneet: Dashboard + (Admin vain admin-roolille)
+     Kirjautumattomat: Kirjaudu-linkki
+============================================================ -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
+
+    <!-- Logo / brändinimi -->
     <a class="navbar-brand fw-bold" routerLink="/">Keep Clean</a>
 
+    <!-- Mobiili-toggler -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarMain">
+
+      <!-- Vasen: julkiset sivut -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Etusivu</a>
@@ -16,14 +27,19 @@
         </li>
       </ul>
 
+      <!-- Oikea: kirjautumistila -->
       <ul class="navbar-nav ms-auto align-items-center">
+
+        <!-- Kirjautuneena -->
         <ng-container *ngIf="authService.isLoggedIn()">
+          <!-- Admin-linkki vain admin-roolille -->
           <li class="nav-item" *ngIf="authService.isAdmin()">
-            <a class="nav-link text-warning fw-semibold" routerLink="/admin" routerLinkActive="active">⚙️ Admin</a>
+            <a class="nav-link text-warning fw-semibold" routerLink="/admin" routerLinkActive="active">Admin</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
           </li>
+          <!-- Kirjautuneen käyttäjän nimi -->
           <li class="nav-item">
             <span class="navbar-text me-3 text-light opacity-75">{{ authService.getUsername() }}</span>
           </li>
@@ -31,11 +47,14 @@
             <button class="btn btn-outline-light btn-sm" (click)="logout()">Kirjaudu ulos</button>
           </li>
         </ng-container>
+
+        <!-- Kirjautumattomana -->
         <ng-container *ngIf="!authService.isLoggedIn()">
           <li class="nav-item">
             <a class="nav-link" routerLink="/login" routerLinkActive="active">Kirjaudu</a>
           </li>
         </ng-container>
+
       </ul>
     </div>
   </div>

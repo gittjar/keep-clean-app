@@ -1,3 +1,8 @@
+<!-- Navigaatiopalkki — piilotetaan display-näkymässä -->
 <app-navbar *ngIf="showShell"></app-navbar>
+
+<!-- Reititys: renderöi aktiivisen sivun tähän -->
 <router-outlet></router-outlet>
+
+<!-- Alatunniste — piilotetaan display-näkymässä -->
 <app-footer *ngIf="showShell"></app-footer>

@@ -1,4 +1,16 @@
-﻿<div class="dashboard-wrapper container-fluid py-4">
+﻿<!-- ============================================================
+     Hallintapaneeli (DashboardComponent)
+     Vain kirjautuneille käyttäjille (suojattu AuthGuard-reittivahtialla).
+     Rakenne:
+       - Yläotsikko + kirjaudu ulos
+       - Toolbar: lajittelu, suodatus, näkymävalitsin
+       - Suodatinpaneeli (sijainti-chipit)
+       - Kortti- tai listanäkymä
+       - Lisää uusi WC-tila -lomake
+     Uudelleenkäytettävät templateit tiedoston lopussa:
+       #sortDir, #elapsedPill, #actionBtns
+============================================================ -->
+<div class="dashboard-wrapper container-fluid py-4">
 
   <!-- Ylaotsikko -->
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -17,30 +29,25 @@
     <!-- Lajittelupainikkeet -->
     <div class="sort-group">
       <span class="toolbar-label">Lajittele:</span>
-      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'lastCleaned'"
-              (click)="setSortBy('lastCleaned')" title="Siivottu viimeksi">
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'lastCleaned'" (click)="setSortBy('lastCleaned')">
         <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>Siivottu
-        <fa-icon *ngIf="sortBy === 'lastCleaned'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+        <ng-container *ngTemplateOutlet="sortDir; context: { k: 'lastCleaned' }"></ng-container>
       </button>
-      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'name'"
-              (click)="setSortBy('name')" title="Nimi">
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'name'" (click)="setSortBy('name')">
         <fa-icon [icon]="faTag" class="me-1"></fa-icon>Nimi
-        <fa-icon *ngIf="sortBy === 'name'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+        <ng-container *ngTemplateOutlet="sortDir; context: { k: 'name' }"></ng-container>
       </button>
-      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'location'"
-              (click)="setSortBy('location')" title="Sijainti">
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'location'" (click)="setSortBy('location')">
         <fa-icon [icon]="faLocationDot" class="me-1"></fa-icon>Sijainti
-        <fa-icon *ngIf="sortBy === 'location'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+        <ng-container *ngTemplateOutlet="sortDir; context: { k: 'location' }"></ng-container>
       </button>
-      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'toiletId'"
-              (click)="setSortBy('toiletId')" title="Tilan ID">
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'toiletId'" (click)="setSortBy('toiletId')">
         <fa-icon [icon]="faHashtag" class="me-1"></fa-icon>ID
-        <fa-icon *ngIf="sortBy === 'toiletId'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+        <ng-container *ngTemplateOutlet="sortDir; context: { k: 'toiletId' }"></ng-container>
       </button>
-      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'status'"
-              (click)="setSortBy('status')" title="Oma / jaettu">
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'status'" (click)="setSortBy('status')">
         <fa-icon [icon]="faUsers" class="me-1"></fa-icon>Tila
-        <fa-icon *ngIf="sortBy === 'status'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+        <ng-container *ngTemplateOutlet="sortDir; context: { k: 'status' }"></ng-container>
       </button>
     </div>
 
@@ -167,20 +174,7 @@
               </div>
             </div>
 
-            <div class="btn-group btn-group-sm" role="group">
-              <button class="btn btn-success" (click)="askResetTimer(toilet)" title="Merkitse siivotuksi">
-                <fa-icon [icon]="faCircleCheck" class="me-1"></fa-icon>Nollaa
-              </button>
-              <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
-                <fa-icon [icon]="faDisplay" class="me-1"></fa-icon>Näyttö
-              </button>
-              <button class="btn btn-outline-secondary" (click)="copyDisplayUrl(toilet)" title="Kopioi URL">
-                <fa-icon [icon]="faCopy"></fa-icon>
-              </button>
-              <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger" (click)="deleteToilet(toilet._id)" title="Poista tila">
-                <fa-icon [icon]="faTrash"></fa-icon>
-              </button>
-            </div>
+            <ng-container *ngTemplateOutlet="actionBtns; context: { t: toilet, l: true }"></ng-container>
           </div>
         </div>
       </div>
@@ -200,19 +194,19 @@
     <div class="list-view-container">
       <div class="list-header-row">
         <span class="list-col-name sort-header" (click)="setSortBy('name')">
-          Nimi <fa-icon *ngIf="sortBy === 'name'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+          Nimi <ng-container *ngTemplateOutlet="sortDir; context: { k: 'name' }"></ng-container>
         </span>
         <span class="list-col-location sort-header list-hide-sm" (click)="setSortBy('location')">
-          Sijainti <fa-icon *ngIf="sortBy === 'location'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+          Sijainti <ng-container *ngTemplateOutlet="sortDir; context: { k: 'location' }"></ng-container>
         </span>
         <span class="list-col-id sort-header list-hide-md" (click)="setSortBy('toiletId')">
-          ID <fa-icon *ngIf="sortBy === 'toiletId'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+          ID <ng-container *ngTemplateOutlet="sortDir; context: { k: 'toiletId' }"></ng-container>
         </span>
         <span class="list-col-cleaned sort-header list-hide-sm" (click)="setSortBy('lastCleaned')">
-          Siivottu <fa-icon *ngIf="sortBy === 'lastCleaned'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+          Siivottu <ng-container *ngTemplateOutlet="sortDir; context: { k: 'lastCleaned' }"></ng-container>
         </span>
         <span class="list-col-owner sort-header list-hide-md" (click)="setSortBy('status')">
-          Omistaja <fa-icon *ngIf="sortBy === 'status'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+          Omistaja <ng-container *ngTemplateOutlet="sortDir; context: { k: 'status' }"></ng-container>
         </span>
         <span class="list-col-actions">Toiminnot</span>
       </div>
@@ -222,9 +216,7 @@
           <span class="fw-semibold list-toilet-name">{{ toilet.name }}</span>
           <!-- Mobiilissa näytetään sijainti ja elapsed nimen alla -->
           <div class="list-mobile-meta">
-            <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(toilet.lastCleaned)">
-              <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
-            </span>
+            <ng-container *ngTemplateOutlet="elapsedPill; context: { t: toilet }"></ng-container>
             <span class="text-muted" style="font-size:0.75rem">
               <fa-icon [icon]="faLocationDot" class="me-1"></fa-icon>{{ toilet.location }}
             </span>
@@ -238,9 +230,7 @@
           <span *ngIf="!toilet.toiletId" class="text-muted small fst-italic">-</span>
         </div>
         <div class="list-col-cleaned list-hide-sm">
-          <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(toilet.lastCleaned)">
-            <fa-icon [icon]="faClockRotateLeft" class="me-1 small"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
-          </span>
+          <ng-container *ngTemplateOutlet="elapsedPill; context: { t: toilet }"></ng-container>
         </div>
         <div class="list-col-owner list-hide-md">
           <span class="owner-dot" [class.dot-own]="isOwner(toilet)" [class.dot-shared]="!isOwner(toilet)"
@@ -250,20 +240,7 @@
           <span class="owner-name-label">{{ isOwner(toilet) ? 'Sinä' : toilet.owner?.username }}</span>
         </div>
         <div class="list-col-actions">
-          <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-success" (click)="askResetTimer(toilet)" title="Merkitse siivotuksi">
-              <fa-icon [icon]="faCircleCheck"></fa-icon>
-            </button>
-            <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
-              <fa-icon [icon]="faDisplay"></fa-icon>
-            </button>
-            <button class="btn btn-outline-secondary" (click)="copyDisplayUrl(toilet)" title="Kopioi URL">
-              <fa-icon [icon]="faCopy"></fa-icon>
-            </button>
-            <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger" (click)="deleteToilet(toilet._id)" title="Poista">
-              <fa-icon [icon]="faTrash"></fa-icon>
-            </button>
-          </div>
+          <ng-container *ngTemplateOutlet="actionBtns; context: { t: toilet, l: false }"></ng-container>
         </div>
       </div>
 
@@ -299,25 +276,37 @@
 
 </div>
 
-<!-- Confirmation modal -->
-<div class="reset-overlay" *ngIf="pendingResetToilet" (click)="cancelReset()">
-  <div class="reset-modal" (click)="$event.stopPropagation()">
-    <div class="reset-modal-icon">
-      <fa-icon [icon]="faBroom"></fa-icon>
-    </div>
-    <h4 class="reset-modal-title">Merkitäänkö siivotuksi?</h4>
-    <p class="reset-modal-name">{{ pendingResetToilet.name }}</p>
-    <p class="reset-modal-sub">{{ pendingResetToilet.location }}</p>
-    <div class="btn-group w-100 mt-3" role="group">
-      <button class="btn btn-success btn-lg reset-btn-confirm" (click)="confirmReset()" [disabled]="resetLoading">
-        <fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>{{ resetLoading ? 'Tallennetaan...' : 'Kyllä, siivottu!' }}
-      </button>
-      <button class="btn btn-outline-secondary btn-lg" (click)="cancelReset()" [disabled]="resetLoading">
-        <fa-icon [icon]="faXmark" class="me-2"></fa-icon>Peruuta
-      </button>
-    </div>
+<!-- ============ UUDELLEENKÄYTETTÄVÄT TEMPLATEIT ============ -->
+
+<!-- Lajittelunuoli -->
+<ng-template #sortDir let-k="k">
+  <fa-icon *ngIf="sortBy === k" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+</ng-template>
+
+<!-- Elapsed-pilli -->
+<ng-template #elapsedPill let-t="t">
+  <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(t.lastCleaned)">
+    <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>{{ getElapsed(t.lastCleaned) }}
+  </span>
+</ng-template>
+
+<!-- Toimintopainikkeet (l = näytä tekstit korttinäkymässä) -->
+<ng-template #actionBtns let-t="t" let-l="l">
+  <div class="btn-group btn-group-sm" role="group">
+    <button class="btn btn-success" (click)="askResetTimer(t)" title="Merkitse siivotuksi">
+      <fa-icon [icon]="faCircleCheck" [class.me-1]="l"></fa-icon><ng-container *ngIf="l">Nollaa</ng-container>
+    </button>
+    <button class="btn btn-outline-primary" (click)="goToDisplay(t)" title="Avaa näyttö">
+      <fa-icon [icon]="faDisplay" [class.me-1]="l"></fa-icon><ng-container *ngIf="l">Näyttö</ng-container>
+    </button>
+    <button class="btn btn-outline-secondary" (click)="copyDisplayUrl(t)" title="Kopioi URL">
+      <fa-icon [icon]="faCopy"></fa-icon>
+    </button>
+    <button *ngIf="isOwner(t)" class="btn btn-outline-danger" (click)="deleteToilet(t._id)" title="Poista">
+      <fa-icon [icon]="faTrash"></fa-icon>
+    </button>
   </div>
-</div>
+</ng-template>
 
 <!-- Confirmation modal -->
 <div class="reset-overlay" *ngIf="pendingResetToilet" (click)="cancelReset()">

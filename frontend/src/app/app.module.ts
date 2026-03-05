@@ -41,8 +41,6 @@ import { AdminComponent } from './admin/admin.component';
     CommonModule,
     FontAwesomeModule,
     HttpClientModule,
-    HttpClientModule
-    
   ],
   providers: [],
   bootstrap: [AppComponent]
