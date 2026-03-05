@@ -470,3 +470,61 @@
   word-break: break-all;
 }
 
+/* ===================== LIST VIEW – MOBIILIMETA ===================== */
+/* Sijainti + elapsed näytetään mobiilissa nimen alla */
+.list-mobile-meta {
+  display: none;
+}
+
+/* ===================== LIST VIEW – RESPONSIVE ===================== */
+
+/* Tablet: piilota ID- ja Omistaja-sarakkeet */
+@media (max-width: 991px) {
+  .list-hide-md {
+    display: none !important;
+  }
+  .list-header-row {
+    grid-template-columns: 2fr 2fr 1.2fr 130px;
+  }
+  .list-row {
+    grid-template-columns: 2fr 2fr 1.2fr 130px;
+  }
+}
+
+/* Mobiili: vain Nimi + Toiminnot, rakenne korttimainen */
+@media (max-width: 575px) {
+  .list-hide-sm {
+    display: none !important;
+  }
+  .list-header-row {
+    display: none;
+  }
+  .list-row {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .list-col-name {
+    overflow: visible;
+    white-space: normal;
+  }
+  .list-mobile-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 3px;
+  }
+  .list-col-actions {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  /* Näytä vain kaksi tärkeintä nappia mobiilissa */
+  .list-col-actions .btn-group .btn:nth-child(n+3) {
+    display: none;
+  }
+}
+

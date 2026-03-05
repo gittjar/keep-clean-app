@@ -202,16 +202,16 @@
         <span class="list-col-name sort-header" (click)="setSortBy('name')">
           Nimi <fa-icon *ngIf="sortBy === 'name'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
         </span>
-        <span class="list-col-location sort-header" (click)="setSortBy('location')">
+        <span class="list-col-location sort-header list-hide-sm" (click)="setSortBy('location')">
           Sijainti <fa-icon *ngIf="sortBy === 'location'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
         </span>
-        <span class="list-col-id sort-header d-none d-md-flex" (click)="setSortBy('toiletId')">
+        <span class="list-col-id sort-header list-hide-md" (click)="setSortBy('toiletId')">
           ID <fa-icon *ngIf="sortBy === 'toiletId'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
         </span>
-        <span class="list-col-cleaned sort-header" (click)="setSortBy('lastCleaned')">
+        <span class="list-col-cleaned sort-header list-hide-sm" (click)="setSortBy('lastCleaned')">
           Siivottu <fa-icon *ngIf="sortBy === 'lastCleaned'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
         </span>
-        <span class="list-col-owner sort-header" (click)="setSortBy('status')">
+        <span class="list-col-owner sort-header list-hide-md" (click)="setSortBy('status')">
           Omistaja <fa-icon *ngIf="sortBy === 'status'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
         </span>
         <span class="list-col-actions">Toiminnot</span>
@@ -220,23 +220,29 @@
       <div *ngFor="let toilet of filteredSorted" class="list-row">
         <div class="list-col-name">
           <span class="fw-semibold list-toilet-name">{{ toilet.name }}</span>
+          <!-- Mobiilissa näytetään sijainti ja elapsed nimen alla -->
+          <div class="list-mobile-meta">
+            <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(toilet.lastCleaned)">
+              <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
+            </span>
+            <span class="text-muted" style="font-size:0.75rem">
+              <fa-icon [icon]="faLocationDot" class="me-1"></fa-icon>{{ toilet.location }}
+            </span>
+          </div>
         </div>
-        <div class="list-col-location">
+        <div class="list-col-location list-hide-sm">
           <fa-icon [icon]="faLocationDot" class="me-1 text-muted small"></fa-icon>{{ toilet.location }}
-          <span class="d-none d-md-none" *ngIf="toilet.toiletId">
-            &nbsp;&middot;&nbsp;<fa-icon [icon]="faHashtag" class="small"></fa-icon>{{ toilet.toiletId }}
-          </span>
         </div>
-        <div class="list-col-id d-none d-md-flex">
+        <div class="list-col-id list-hide-md">
           <span *ngIf="toilet.toiletId" class="text-muted small">{{ toilet.toiletId }}</span>
           <span *ngIf="!toilet.toiletId" class="text-muted small fst-italic">-</span>
         </div>
-        <div class="list-col-cleaned">
+        <div class="list-col-cleaned list-hide-sm">
           <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(toilet.lastCleaned)">
             <fa-icon [icon]="faClockRotateLeft" class="me-1 small"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
           </span>
         </div>
-        <div class="list-col-owner">
+        <div class="list-col-owner list-hide-md">
           <span class="owner-dot" [class.dot-own]="isOwner(toilet)" [class.dot-shared]="!isOwner(toilet)"
                 [title]="isOwner(toilet) ? 'Oma' : 'Jaettu'">
             {{ (toilet.owner?.username || '') | slice:0:1 | uppercase }}
