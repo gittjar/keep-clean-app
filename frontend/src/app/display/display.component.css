@@ -187,3 +187,132 @@ h1.toilet-name {
   font-size: 0.9rem;
 }
 .pin-cancel:hover { color: #333; }
+
+/* ===================== SIIVOUSHISTORIA-PANEELI ===================== */
+.history-panel {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  padding: 0.9rem 1.2rem;
+  min-width: 230px;
+  max-width: 280px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13);
+  z-index: 50;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Tab-nappi piilotetaan defaultisti desktopilla */
+.history-tab {
+  display: none;
+}
+
+.history-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-icon {
+  font-size: 0.9rem;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.history-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.history-entry:first-child {
+  background: rgba(6, 188, 50, 0.1);
+}
+
+.history-who {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.history-when {
+  font-size: 0.72rem;
+  color: #777;
+}
+
+/* Mobiilissa paneeli on sivussa — liukuu oikealta */
+@media (max-width: 575px) {
+  .history-panel {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    bottom: unset;
+    transform: translateX(100%) translateY(-50%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 14px 0 0 14px;
+    max-width: 260px;
+    min-width: 220px;
+    padding: 1rem 1rem 1rem 1.2rem;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .history-panel.history-open {
+    transform: translateX(0) translateY(-50%);
+  }
+
+  /* Lirpake-nappi joka jää aina näkyviin */
+  .history-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -3px 0 12px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .history-tab-label {
+    font-size: 0.65rem;
+    color: #666;
+    line-height: 1;
+  }
+
+  .history-list {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

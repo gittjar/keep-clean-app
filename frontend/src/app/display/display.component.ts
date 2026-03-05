@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToiletService, Toilet } from '../services/toilet.service';
+import { ToiletService, Toilet, CleaningEntry } from '../services/toilet.service';
 
 @Component({
   standalone: false,
@@ -22,6 +22,10 @@ export class DisplayComponent implements OnInit, OnDestroy {
   color2 = '#ffffff';
   overTimeText = '';
   showWarning = false;
+
+  // Siivoushistoria-paneeli
+  historyOpen = false;
+  toggleHistory() { this.historyOpen = !this.historyOpen; }
 
   // PIN-resetointi
   showPinModal = false;
@@ -97,6 +101,11 @@ export class DisplayComponent implements OnInit, OnDestroy {
     return 'Needs Cleaning';
   }
 
+  get recentLog(): CleaningEntry[] {
+    if (!this.toilet?.cleaningLog?.length) return [];
+    return [...this.toilet.cleaningLog].reverse().slice(0, 5);
+  }
+
   get elapsedDisplay(): string {
     if (!this.toilet) return '';
     return this.toiletService.formatElapsed(this.toilet.lastCleaned);
@@ -120,9 +129,12 @@ export class DisplayComponent implements OnInit, OnDestroy {
     this.pinError = '';
     this.toiletService.pinReset(this.toilet._id, this.pinUsername, this.pinCode).subscribe({
       next: (res) => {
-        if (this.toilet) this.toilet.lastCleaned = res.lastCleaned;
+        if (this.toilet) {
+          this.toilet.lastCleaned = res.lastCleaned;
+          if (res.toilet?.cleaningLog) this.toilet.cleaningLog = res.toilet.cleaningLog;
+        }
         this.updateTimer();
-        this.pinSuccess = 'Timer nollattu!';
+        this.pinSuccess = 'Timer nollattu!';  
         this.pinLoading = false;
         setTimeout(() => { this.showPinModal = false; this.pinSuccess = ''; }, 1500);
       },

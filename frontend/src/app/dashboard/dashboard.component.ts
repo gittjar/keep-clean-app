@@ -194,12 +194,30 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  resetTimer(toilet: Toilet) {
+  // Confirmation modal
+  pendingResetToilet: Toilet | null = null;
+  resetLoading = false;
+
+  askResetTimer(toilet: Toilet) {
+    this.pendingResetToilet = toilet;
+  }
+
+  cancelReset() {
+    this.pendingResetToilet = null;
+  }
+
+  confirmReset() {
+    if (!this.pendingResetToilet) return;
+    this.resetLoading = true;
+    const toilet = this.pendingResetToilet;
     this.toiletService.resetTimer(toilet._id).subscribe({
       next: (res) => {
         toilet.lastCleaned = res.lastCleaned;
         toilet.cleaningLog = res.toilet.cleaningLog;
-      }
+        this.pendingResetToilet = null;
+        this.resetLoading = false;
+      },
+      error: () => { this.resetLoading = false; }
     });
   }
 

@@ -168,7 +168,7 @@
             </div>
 
             <div class="btn-group btn-group-sm" role="group">
-              <button class="btn btn-success" (click)="resetTimer(toilet)" title="Nollaa timer">
+              <button class="btn btn-success" (click)="askResetTimer(toilet)" title="Merkitse siivotuksi">
                 <fa-icon [icon]="faCircleCheck" class="me-1"></fa-icon>Nollaa
               </button>
               <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
@@ -251,7 +251,7 @@
         </div>
         <div class="list-col-actions">
           <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-success" (click)="resetTimer(toilet)" title="Nollaa timer">
+            <button class="btn btn-success" (click)="askResetTimer(toilet)" title="Merkitse siivotuksi">
               <fa-icon [icon]="faCircleCheck"></fa-icon>
             </button>
             <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
@@ -297,6 +297,46 @@
     </button>
   </div>
 
+</div>
+
+<!-- Confirmation modal -->
+<div class="reset-overlay" *ngIf="pendingResetToilet" (click)="cancelReset()">
+  <div class="reset-modal" (click)="$event.stopPropagation()">
+    <div class="reset-modal-icon">
+      <fa-icon [icon]="faBroom"></fa-icon>
+    </div>
+    <h4 class="reset-modal-title">Merkitäänkö siivotuksi?</h4>
+    <p class="reset-modal-name">{{ pendingResetToilet.name }}</p>
+    <p class="reset-modal-sub">{{ pendingResetToilet.location }}</p>
+    <div class="btn-group w-100 mt-3" role="group">
+      <button class="btn btn-success btn-lg reset-btn-confirm" (click)="confirmReset()" [disabled]="resetLoading">
+        <fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>{{ resetLoading ? 'Tallennetaan...' : 'Kyllä, siivottu!' }}
+      </button>
+      <button class="btn btn-outline-secondary btn-lg" (click)="cancelReset()" [disabled]="resetLoading">
+        <fa-icon [icon]="faXmark" class="me-2"></fa-icon>Peruuta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation modal -->
+<div class="reset-overlay" *ngIf="pendingResetToilet" (click)="cancelReset()">
+  <div class="reset-modal" (click)="$event.stopPropagation()">
+    <div class="reset-modal-icon">
+      <fa-icon [icon]="faBroom"></fa-icon>
+    </div>
+    <h4 class="reset-modal-title">Merkitäänkö siivotuksi?</h4>
+    <p class="reset-modal-name">{{ pendingResetToilet.name }}</p>
+    <p class="reset-modal-sub">{{ pendingResetToilet.location }}</p>
+    <div class="btn-group w-100 mt-3" role="group">
+      <button class="btn btn-success btn-lg reset-btn-confirm" (click)="confirmReset()" [disabled]="resetLoading">
+        <fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>{{ resetLoading ? 'Tallennetaan...' : 'Kyllä, siivottu!' }}
+      </button>
+      <button class="btn btn-outline-secondary btn-lg" (click)="cancelReset()" [disabled]="resetLoading">
+        <fa-icon [icon]="faXmark" class="me-2"></fa-icon>Peruuta
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Toast-ilmoitus -->

@@ -37,6 +37,23 @@
 
   </div>
 
+  <!-- Siivoushistoria-paneeli -->
+  <div class="history-panel" [class.history-open]="historyOpen" *ngIf="!loading && toilet && recentLog.length">
+    <button class="history-tab" (click)="toggleHistory()" [attr.aria-label]="historyOpen ? 'Sulje historia' : 'Avaa siivoushistoria'">
+      <span class="history-tab-icon">🧹</span>
+      <span class="history-tab-label">{{ historyOpen ? '✕' : '' }}</span>
+    </button>
+    <div class="history-title">
+      <span class="history-icon">&#x1F9F9;</span> Siivoushistoria
+    </div>
+    <ul class="history-list">
+      <li *ngFor="let entry of recentLog" class="history-entry">
+        <span class="history-who">{{ entry.cleanedBy }}</span>
+        <span class="history-when">{{ entry.cleanedAt | date:'dd.MM.yyyy HH:mm' }}</span>
+      </li>
+    </ul>
+  </div>
+
   <!-- PIN-modaali -->
   <div class="pin-overlay" *ngIf="showPinModal" (click)="closePinModal()">
     <div class="pin-modal" (click)="$event.stopPropagation()">
