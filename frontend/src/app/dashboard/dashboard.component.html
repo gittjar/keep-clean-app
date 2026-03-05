@@ -1,5 +1,7 @@
 ﻿<div class="dashboard-wrapper container-fluid py-4">
-  <div class="d-flex align-items-center justify-content-between mb-4">
+
+  <!-- Ylaotsikko -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
     <div>
       <h2 class="mb-0">Keep Clean &ndash; Hallintapaneeli</h2>
       <small class="text-muted">Kirjautunut: {{ username }}</small>
@@ -9,34 +11,121 @@
     </button>
   </div>
 
+  <!-- Toolbar: lajittelu + suodatus + nakyma -->
+  <div class="toolbar-row mb-3">
+
+    <!-- Lajittelupainikkeet -->
+    <div class="sort-group">
+      <span class="toolbar-label">Lajittele:</span>
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'lastCleaned'"
+              (click)="setSortBy('lastCleaned')" title="Siivottu viimeksi">
+        <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>Siivottu
+        <fa-icon *ngIf="sortBy === 'lastCleaned'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+      </button>
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'name'"
+              (click)="setSortBy('name')" title="Nimi">
+        <fa-icon [icon]="faTag" class="me-1"></fa-icon>Nimi
+        <fa-icon *ngIf="sortBy === 'name'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+      </button>
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'location'"
+              (click)="setSortBy('location')" title="Sijainti">
+        <fa-icon [icon]="faLocationDot" class="me-1"></fa-icon>Sijainti
+        <fa-icon *ngIf="sortBy === 'location'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+      </button>
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'toiletId'"
+              (click)="setSortBy('toiletId')" title="Tilan ID">
+        <fa-icon [icon]="faHashtag" class="me-1"></fa-icon>ID
+        <fa-icon *ngIf="sortBy === 'toiletId'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+      </button>
+      <button class="btn btn-sm sort-btn" [class.active]="sortBy === 'status'"
+              (click)="setSortBy('status')" title="Oma / jaettu">
+        <fa-icon [icon]="faUsers" class="me-1"></fa-icon>Tila
+        <fa-icon *ngIf="sortBy === 'status'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1 sort-dir"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Oikea puoli: suodatin + nakymavalitsimet -->
+    <div class="toolbar-right">
+      <button class="btn btn-sm filter-btn" [class.active]="showFilterPanel || activeLocations.size > 0"
+              (click)="showFilterPanel = !showFilterPanel">
+        <fa-icon [icon]="faSliders" class="me-1"></fa-icon>Suodata
+        <span *ngIf="activeLocations.size > 0" class="filter-count">{{ activeLocations.size }}</span>
+      </button>
+      <div class="view-toggle ms-2">
+        <button class="btn btn-sm view-btn" [class.active]="viewMode === 'card'" (click)="viewMode = 'card'" title="Korttinakym">
+          <fa-icon [icon]="faTableCells"></fa-icon>
+        </button>
+        <button class="btn btn-sm view-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'" title="Listanakym">
+          <fa-icon [icon]="faList"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suodatinpaneeli -->
+  <div *ngIf="showFilterPanel" class="filter-panel mb-3">
+    <div class="filter-panel-header">
+      <fa-icon [icon]="faLocationDot" class="me-1"></fa-icon>
+      <strong>Suodata sijainnin mukaan</strong>
+      <button *ngIf="activeLocations.size > 0" class="btn btn-link btn-sm py-0 ms-2 text-danger" (click)="clearFilters()">
+        <fa-icon [icon]="faXmark" class="me-1"></fa-icon>Tyhjennä
+      </button>
+    </div>
+    <div class="filter-checkboxes">
+      <label *ngFor="let loc of uniqueLocations" class="filter-chip"
+             [class.active]="isLocationActive(loc)">
+        <input type="checkbox" class="d-none"
+               [checked]="isLocationActive(loc)"
+               (change)="toggleLocation(loc)">
+        {{ loc }}
+        <span class="chip-count">({{ getLocationCount(loc) }})</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Tulosrivi -->
+  <div class="results-bar mb-2" *ngIf="!loading">
+    <span class="text-muted small">
+      Näytetään {{ filteredSorted.length }} / {{ toilets.length }} tilaa
+    </span>
+    <span *ngIf="activeLocations.size > 0" class="ms-2 badge bg-primary">
+      {{ activeLocations.size }} sijainnin suodatin
+    </span>
+  </div>
+
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary"></div>
   </div>
 
   <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
 
-  <div *ngIf="!loading">
+  <!-- KORTTINAKYM -->
+  <div *ngIf="!loading && viewMode === 'card'">
     <div class="row g-3 mb-4">
-      <div class="col-md-4" *ngFor="let toilet of toilets">
+      <div class="col-md-4" *ngFor="let toilet of filteredSorted">
         <div class="card toilet-card h-100" [class.shared-card]="!isOwner(toilet)">
           <div class="card-body">
-
-            <!-- Otsikkorivi -->
             <div class="d-flex justify-content-between align-items-start mb-1">
               <h5 class="card-title mb-0">{{ toilet.name }}</h5>
               <span *ngIf="!isOwner(toilet)" class="badge bg-secondary shared-badge">
                 <fa-icon [icon]="faShareNodes" class="me-1"></fa-icon>Jaettu
               </span>
             </div>
-            <p class="card-text text-muted mb-1">{{ toilet.location }}</p>
-            <p class="card-text text-muted mb-1" *ngIf="toilet.toiletId">ID: {{ toilet.toiletId }}</p>
+            <p class="card-text text-muted mb-1">
+              <fa-icon [icon]="faLocationDot" class="me-1 small"></fa-icon>{{ toilet.location }}
+            </p>
+            <p class="card-text text-muted mb-1" *ngIf="toilet.toiletId">
+              <fa-icon [icon]="faHashtag" class="me-1 small"></fa-icon>{{ toilet.toiletId }}
+            </p>
             <p *ngIf="!isOwner(toilet)" class="owner-label mb-2">
               <fa-icon [icon]="faUser" class="me-1"></fa-icon>Omistaja: <strong>{{ toilet.owner?.username }}</strong>
             </p>
 
-            <span class="badge bg-info text-dark mb-2">Siivottu: {{ getElapsed(toilet.lastCleaned) }}</span>
+            <span class="badge mb-2 elapsed-badge" [class.badge-warn]="isLongAgo(toilet.lastCleaned)">
+              <fa-icon [icon]="faClockRotateLeft" class="me-1"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
+            </span>
 
-            <!-- Siivoushistoria -->
+            <!-- Historia -->
             <div class="mb-2">
               <button class="btn btn-link btn-sm p-0 text-secondary history-toggle"
                       (click)="toggleHistory(toilet._id)">
@@ -44,9 +133,7 @@
                 <fa-icon [icon]="expandedHistory[toilet._id] ? faChevronUp : faChevronDown" class="ms-1 toggle-arrow"></fa-icon>
               </button>
               <div *ngIf="expandedHistory[toilet._id]" class="cleaning-history mt-2">
-                <div *ngIf="!toilet.cleaningLog.length" class="text-muted small fst-italic">
-                  Ei siivouskirjauksia
-                </div>
+                <div *ngIf="!toilet.cleaningLog.length" class="text-muted small fst-italic">Ei siivouskirjauksia</div>
                 <ul class="list-unstyled mb-0">
                   <li *ngFor="let entry of getRecentHistory(toilet)" class="history-entry">
                     <span class="history-who"><fa-icon [icon]="faBroom" class="me-1"></fa-icon>{{ entry.cleanedBy }}</span>
@@ -56,91 +143,154 @@
               </div>
             </div>
 
-            <!-- Oikeuksien hallinta - vain omistajalle -->
+            <!-- Oikeudet -->
             <div *ngIf="isOwner(toilet)" class="mb-3">
-              <button class="btn btn-link btn-sm p-0 perms-toggle"
-                      (click)="togglePermissions(toilet._id)">
+              <button class="btn btn-link btn-sm p-0 perms-toggle" (click)="togglePermissions(toilet._id)">
                 <fa-icon [icon]="faKey" class="me-1"></fa-icon>Oikeudet ({{ toilet.allowedUsers.length }})
                 <fa-icon [icon]="expandedPermissions[toilet._id] ? faChevronUp : faChevronDown" class="ms-1 toggle-arrow"></fa-icon>
               </button>
               <div *ngIf="expandedPermissions[toilet._id]" class="perms-panel mt-2">
-                <div *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic mb-2">
-                  Ei jaettuja oikeuksia
-                </div>
+                <div *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic mb-2">Ei jaettuja oikeuksia</div>
                 <div *ngFor="let u of toilet.allowedUsers" class="perm-row">
                   <span><fa-icon [icon]="faUser" class="me-1"></fa-icon>{{ u.username }}</span>
-                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">
-                    <fa-icon [icon]="faXmark"></fa-icon>
-                  </button>
+                  <button class="btn btn-outline-danger btn-xs" (click)="revokeAccess(toilet, u._id)"><fa-icon [icon]="faXmark"></fa-icon></button>
                 </div>
                 <div class="d-flex gap-2 mt-2" *ngIf="getGrantableUsers(toilet).length > 0">
                   <select class="form-select form-select-sm" [(ngModel)]="grantUserIdMap[toilet._id]">
-                    <option value="">Valitse kayttaja...</option>
+                    <option value="">Valitse käyttäjä...</option>
                     <option *ngFor="let u of getGrantableUsers(toilet)" [value]="u._id">{{ u.username }}</option>
                   </select>
-                  <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)"
-                          [disabled]="!grantUserIdMap[toilet._id]">
+                  <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)" [disabled]="!grantUserIdMap[toilet._id]">
                     <fa-icon [icon]="faPlus"></fa-icon>
                   </button>
                 </div>
-                <p *ngIf="getGrantableUsers(toilet).length === 0 && toilet.allowedUsers.length > 0"
-                   class="text-muted small fst-italic mt-1 mb-0">Kaikille kayttajille on jo myonnetty oikeus.</p>
               </div>
             </div>
 
-            <!-- Toimintopainikkeet -->
-            <div class="d-flex gap-2 flex-wrap">
-              <button class="btn btn-success btn-sm" (click)="resetTimer(toilet)">
-                <fa-icon [icon]="faCircleCheck" class="me-1"></fa-icon>Nollaa timer
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-success" (click)="resetTimer(toilet)" title="Nollaa timer">
+                <fa-icon [icon]="faCircleCheck" class="me-1"></fa-icon>Nollaa
               </button>
-              <button class="btn btn-outline-primary btn-sm" (click)="goToDisplay(toilet)">
-                <fa-icon [icon]="faDisplay" class="me-1"></fa-icon>Naytto
+              <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
+                <fa-icon [icon]="faDisplay" class="me-1"></fa-icon>Näyttö
               </button>
-              <button class="btn btn-outline-secondary btn-sm" (click)="copyDisplayUrl(toilet)" title="Kopioi nayton URL">
-                <fa-icon [icon]="faCopy" class="me-1"></fa-icon>Kopioi URL
+              <button class="btn btn-outline-secondary" (click)="copyDisplayUrl(toilet)" title="Kopioi URL">
+                <fa-icon [icon]="faCopy"></fa-icon>
               </button>
-              <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger btn-sm" (click)="deleteToilet(toilet._id)">
-                <fa-icon [icon]="faTrash" class="me-1"></fa-icon>Poista
+              <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger" (click)="deleteToilet(toilet._id)" title="Poista tila">
+                <fa-icon [icon]="faTrash"></fa-icon>
               </button>
             </div>
-
           </div>
         </div>
       </div>
 
-      <div class="col-md-4" *ngIf="toilets.length === 0 && !showAddForm">
+      <div class="col-md-4" *ngIf="filteredSorted.length === 0 && !showAddForm">
         <div class="card h-100 border-dashed">
           <div class="card-body text-center text-muted d-flex align-items-center justify-content-center">
-            <p>Ei WC-tiloja viela. Lisaa ensimmainen!</p>
+            <p>Ei tiloja valituilla suodattimilla.</p>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Lisaa uusi WC-tila -->
-    <button class="btn btn-primary mb-3" (click)="showAddForm = !showAddForm">
-      <fa-icon [icon]="showAddForm ? faXmark : faPlus" class="me-1"></fa-icon>{{ showAddForm ? 'Peruuta' : 'Lisaa WC-tila' }}
-    </button>
+  <!-- LISTANAKYM -->
+  <div *ngIf="!loading && viewMode === 'list'" class="mb-4">
+    <div class="list-view-container">
+      <div class="list-header-row">
+        <span class="list-col-name sort-header" (click)="setSortBy('name')">
+          Nimi <fa-icon *ngIf="sortBy === 'name'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+        </span>
+        <span class="list-col-location sort-header" (click)="setSortBy('location')">
+          Sijainti <fa-icon *ngIf="sortBy === 'location'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+        </span>
+        <span class="list-col-id sort-header d-none d-md-flex" (click)="setSortBy('toiletId')">
+          ID <fa-icon *ngIf="sortBy === 'toiletId'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+        </span>
+        <span class="list-col-cleaned sort-header" (click)="setSortBy('lastCleaned')">
+          Siivottu <fa-icon *ngIf="sortBy === 'lastCleaned'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+        </span>
+        <span class="list-col-owner sort-header" (click)="setSortBy('status')">
+          Omistaja <fa-icon *ngIf="sortBy === 'status'" [icon]="sortAsc ? faArrowUp : faArrowDown" class="ms-1"></fa-icon>
+        </span>
+        <span class="list-col-actions">Toiminnot</span>
+      </div>
 
-    <div *ngIf="showAddForm" class="card p-3 mb-4" style="max-width: 480px;">
-      <h5>Uusi WC-tila</h5>
-      <div class="mb-2">
-        <label class="form-label">Nimi *</label>
-        <input type="text" class="form-control" [(ngModel)]="newName" placeholder="esim. Terminal 1 / M / Basement" />
+      <div *ngFor="let toilet of filteredSorted" class="list-row">
+        <div class="list-col-name">
+          <span class="fw-semibold list-toilet-name">{{ toilet.name }}</span>
+        </div>
+        <div class="list-col-location">
+          <fa-icon [icon]="faLocationDot" class="me-1 text-muted small"></fa-icon>{{ toilet.location }}
+          <span class="d-none d-md-none" *ngIf="toilet.toiletId">
+            &nbsp;&middot;&nbsp;<fa-icon [icon]="faHashtag" class="small"></fa-icon>{{ toilet.toiletId }}
+          </span>
+        </div>
+        <div class="list-col-id d-none d-md-flex">
+          <span *ngIf="toilet.toiletId" class="text-muted small">{{ toilet.toiletId }}</span>
+          <span *ngIf="!toilet.toiletId" class="text-muted small fst-italic">-</span>
+        </div>
+        <div class="list-col-cleaned">
+          <span class="elapsed-pill" [class.elapsed-warn]="isLongAgo(toilet.lastCleaned)">
+            <fa-icon [icon]="faClockRotateLeft" class="me-1 small"></fa-icon>{{ getElapsed(toilet.lastCleaned) }}
+          </span>
+        </div>
+        <div class="list-col-owner">
+          <span class="owner-dot" [class.dot-own]="isOwner(toilet)" [class.dot-shared]="!isOwner(toilet)"
+                [title]="isOwner(toilet) ? 'Oma' : 'Jaettu'">
+            {{ (toilet.owner?.username || '') | slice:0:1 | uppercase }}
+          </span>
+          <span class="owner-name-label">{{ isOwner(toilet) ? 'Sinä' : toilet.owner?.username }}</span>
+        </div>
+        <div class="list-col-actions">
+          <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-success" (click)="resetTimer(toilet)" title="Nollaa timer">
+              <fa-icon [icon]="faCircleCheck"></fa-icon>
+            </button>
+            <button class="btn btn-outline-primary" (click)="goToDisplay(toilet)" title="Avaa näyttö">
+              <fa-icon [icon]="faDisplay"></fa-icon>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="copyDisplayUrl(toilet)" title="Kopioi URL">
+              <fa-icon [icon]="faCopy"></fa-icon>
+            </button>
+            <button *ngIf="isOwner(toilet)" class="btn btn-outline-danger" (click)="deleteToilet(toilet._id)" title="Poista">
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="mb-2">
-        <label class="form-label">Sijainti *</label>
-        <input type="text" class="form-control" [(ngModel)]="newLocation" placeholder="esim. Helsinki-Vantaa Airport" />
+
+      <div *ngIf="filteredSorted.length === 0" class="list-empty">
+        Ei tiloja valituilla suodattimilla.
       </div>
-      <div class="mb-3">
-        <label class="form-label">Tilan ID (valinnainen)</label>
-        <input type="text" class="form-control" [(ngModel)]="newToiletId" placeholder="esim. 1.44" />
-      </div>
-      <button class="btn btn-success" (click)="addToilet()" [disabled]="adding || !newName || !newLocation">
-        <fa-icon [icon]="faPlus" class="me-1"></fa-icon>{{ adding ? 'Lisataan...' : 'Lisaa' }}
-      </button>
     </div>
   </div>
+
+  <!-- Lisaa uusi WC-tila -->
+  <button class="btn btn-primary mb-3" (click)="showAddForm = !showAddForm">
+    <fa-icon [icon]="showAddForm ? faXmark : faPlus" class="me-1"></fa-icon>{{ showAddForm ? 'Peruuta' : 'Lisää WC-tila' }}
+  </button>
+
+  <div *ngIf="showAddForm" class="card p-3 mb-4" style="max-width: 480px;">
+    <h5>Uusi WC-tila</h5>
+    <div class="mb-2">
+      <label class="form-label">Nimi *</label>
+      <input type="text" class="form-control" [(ngModel)]="newName" placeholder="esim. Terminal 1 / M / Basement" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Sijainti *</label>
+      <input type="text" class="form-control" [(ngModel)]="newLocation" placeholder="esim. Helsinki-Vantaa Airport" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tilan ID (valinnainen)</label>
+      <input type="text" class="form-control" [(ngModel)]="newToiletId" placeholder="esim. 1.44" />
+    </div>
+    <button class="btn btn-success" (click)="addToilet()" [disabled]="adding || !newName || !newLocation">
+      <fa-icon [icon]="faPlus" class="me-1"></fa-icon>{{ adding ? 'Lisätään...' : 'Lisää' }}
+    </button>
+  </div>
+
 </div>
 
 <!-- Toast-ilmoitus -->

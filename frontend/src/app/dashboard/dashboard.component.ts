@@ -5,7 +5,9 @@ import { AuthService } from '../services/auth.service';
 import {
   faRightFromBracket, faShareNodes, faUser, faClockRotateLeft,
   faChevronUp, faChevronDown, faBroom, faKey, faXmark, faPlus,
-  faCircleCheck, faDisplay, faCopy, faTrash, faCheck, faUserShield
+  faCircleCheck, faDisplay, faCopy, faTrash, faCheck, faUserShield,
+  faTableCells, faList, faArrowUp, faArrowDown, faFilter, faSliders,
+  faSort, faClock, faLocationDot, faHashtag, faTag, faUsers
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -38,6 +40,80 @@ export class DashboardComponent implements OnInit {
   toastVisible = false;
   private toastTimer: any;
 
+  // Näkymä ja lajittelu
+  viewMode: 'card' | 'list' = 'card';
+  sortBy: 'lastCleaned' | 'name' | 'location' | 'toiletId' | 'status' = 'lastCleaned';
+  sortAsc = true;
+  showFilterPanel = false;
+  activeLocations: Set<string> = new Set();
+
+  get uniqueLocations(): string[] {
+    return [...new Set(this.toilets.map(t => t.location))].sort();
+  }
+
+  get filteredSorted(): Toilet[] {
+    let result = this.toilets.slice();
+
+    // Sijainnin suodatus
+    if (this.activeLocations.size > 0) {
+      result = result.filter(t => this.activeLocations.has(t.location));
+    }
+
+    // Lajittelu
+    result.sort((a, b) => {
+      let val = 0;
+      switch (this.sortBy) {
+        case 'lastCleaned':
+          val = new Date(a.lastCleaned).getTime() - new Date(b.lastCleaned).getTime();
+          break;
+        case 'name':
+          val = a.name.localeCompare(b.name, 'fi');
+          break;
+        case 'location':
+          val = a.location.localeCompare(b.location, 'fi');
+          break;
+        case 'toiletId':
+          val = (a.toiletId || '').localeCompare(b.toiletId || '', 'fi');
+          break;
+        case 'status':
+          // oma ensin tai jaettu ensin
+          const aOwn = this.isOwner(a) ? 0 : 1;
+          const bOwn = this.isOwner(b) ? 0 : 1;
+          val = aOwn - bOwn;
+          break;
+      }
+      return this.sortAsc ? val : -val;
+    });
+
+    return result;
+  }
+
+  setSortBy(key: 'lastCleaned' | 'name' | 'location' | 'toiletId' | 'status') {
+    if (this.sortBy === key) {
+      this.sortAsc = !this.sortAsc;
+    } else {
+      this.sortBy = key;
+      this.sortAsc = true;
+    }
+  }
+
+  toggleLocation(loc: string) {
+    if (this.activeLocations.has(loc)) {
+      this.activeLocations.delete(loc);
+    } else {
+      this.activeLocations.add(loc);
+    }
+    this.activeLocations = new Set(this.activeLocations); // trigger change detection
+  }
+
+  isLocationActive(loc: string): boolean {
+    return this.activeLocations.has(loc);
+  }
+
+  clearFilters() {
+    this.activeLocations = new Set();
+  }
+
   // FontAwesome icons
   faRightFromBracket = faRightFromBracket;
   faShareNodes = faShareNodes;
@@ -55,6 +131,18 @@ export class DashboardComponent implements OnInit {
   faTrash = faTrash;
   faCheck = faCheck;
   faUserShield = faUserShield;
+  faTableCells = faTableCells;
+  faList = faList;
+  faArrowUp = faArrowUp;
+  faArrowDown = faArrowDown;
+  faFilter = faFilter;
+  faSliders = faSliders;
+  faSort = faSort;
+  faClock = faClockRotateLeft;
+  faLocationDot = faLocationDot;
+  faHashtag = faHashtag;
+  faTag = faTag;
+  faUsers = faUsers;
 
   constructor(
     private toiletService: ToiletService,
@@ -73,8 +161,17 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.toiletService.getToilets().subscribe({
       next: (data) => { this.toilets = data; this.loading = false; },
-      error: () => { this.errorMsg = 'Tilojen lataus epÃ¤onnistui'; this.loading = false; }
+      error: () => { this.errorMsg = 'Tilojen lataus epäonnistui'; this.loading = false; }
     });
+  }
+
+  isLongAgo(lastCleaned: string): boolean {
+    const hours = (Date.now() - new Date(lastCleaned).getTime()) / (1000 * 60 * 60);
+    return hours > 24;
+  }
+
+  getLocationCount(loc: string): number {
+    return this.toilets.filter(t => t.location === loc).length;
   }
 
   isOwner(toilet: Toilet): boolean {
@@ -154,7 +251,7 @@ export class DashboardComponent implements OnInit {
         toilet.allowedUsers = res.toilet.allowedUsers;
         this.grantUserIdMap[toilet._id] = '';
       },
-      error: (err) => alert(err.error?.message || 'MyÃ¶ntÃ¤minen epÃ¤onnistui')
+      error: (err) => alert(err.error?.message || 'Myöntäminen epäonnistui')
     });
   }
 
@@ -163,7 +260,7 @@ export class DashboardComponent implements OnInit {
       next: () => {
         toilet.allowedUsers = toilet.allowedUsers.filter(u => u._id !== targetUserId);
       },
-      error: (err) => alert(err.error?.message || 'Poistaminen epÃ¤onnistui')
+      error: (err) => alert(err.error?.message || 'Poistaminen epäonnistui')
     });
   }
 
