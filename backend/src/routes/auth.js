@@ -55,6 +55,17 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Väärä käyttäjänimi tai PIN' });
     }
 
+    // Tarkista jäädytys
+    if (user.frozenUntil && new Date(user.frozenUntil) > new Date()) {
+      const msLeft = new Date(user.frozenUntil) - new Date();
+      const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+      return res.status(403).json({
+        message: `Tilisi on jäädytetty ${daysLeft} päivän ajaksi. Ole yhteydessä adminiin tarvittaessa.`,
+        frozen: true,
+        frozenUntil: user.frozenUntil
+      });
+    }
+
     const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({ token, username: user.username, userId: user._id, role: user.role });

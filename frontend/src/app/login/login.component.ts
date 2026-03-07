@@ -13,6 +13,7 @@ export class LoginComponent {
   pin = '';
   adminCode = '';
   errorMsg = '';
+  frozenError = false;
   isRegister = false;
   loading = false;
 
@@ -20,6 +21,7 @@ export class LoginComponent {
 
   submit() {
     this.errorMsg = '';
+    this.frozenError = false;
     this.loading = true;
 
     const action$ = this.isRegister
@@ -35,6 +37,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.frozenError = err.error?.frozen === true;
         this.errorMsg = err.error?.message || 'Jokin meni pieleen';
         this.loading = false;
       }
@@ -44,6 +47,7 @@ export class LoginComponent {
   toggleMode() {
     this.isRegister = !this.isRegister;
     this.errorMsg = '';
+    this.frozenError = false;
     this.adminCode = '';
   }
 }

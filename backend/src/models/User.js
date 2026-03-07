@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  frozenUntil: {
+    type: Date,
+    default: null,
+  },
 });
 
 userSchema.pre('save', async function () {

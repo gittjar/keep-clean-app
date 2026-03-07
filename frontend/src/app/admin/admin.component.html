@@ -54,7 +54,7 @@
                 <div class="d-flex flex-wrap gap-1 mb-1">
                   <span *ngFor="let u of toilet.allowedUsers" class="badge bg-secondary allowed-badge">
                     {{ u.username }}
-                    <button class="btn-remove-badge" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus">✕</button>
+                    <button class="btn-remove-badge" (click)="revokeAccess(toilet, u._id)" title="Poista oikeus"><fa-icon [icon]="faXmark"></fa-icon></button>
                   </span>
                   <span *ngIf="!toilet.allowedUsers.length" class="text-muted small fst-italic">–</span>
                 </div>
@@ -67,7 +67,7 @@
                     <option *ngFor="let u of getGrantableUsers(toilet)" [value]="u._id">{{ u.username }}</option>
                   </select>
                   <button class="btn btn-success btn-sm" (click)="grantAccess(toilet)"
-                          [disabled]="!grantUserIdMap[toilet._id]">✓</button>
+                          [disabled]="!grantUserIdMap[toilet._id]"><fa-icon [icon]="faCheck"></fa-icon></button>
                 </div>
               </td>
               <td class="text-muted small">{{ formatDate(toilet.createdAt) }}</td>
@@ -92,33 +92,147 @@
           <tr>
             <th>Käyttäjänimi</th>
             <th>Rooli</th>
+            <th>Tila</th>
             <th>Luotu</th>
-            <th>Toiminto</th>
+            <th>Toiminnot</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users">
-            <td><strong>{{ user.username }}</strong></td>
+          <tr *ngFor="let user of users" [class.table-secondary]="isFrozen(user)">
+            <td>
+              <strong>{{ user.username }}</strong>
+              <span *ngIf="isOwnAccount(user)" class="badge bg-info ms-2">Sinä</span>
+            </td>
             <td>
               <span class="badge" [class.bg-danger]="user.role === 'admin'" [class.bg-secondary]="user.role !== 'admin'">
                 {{ user.role }}
               </span>
             </td>
+            <td>
+              <span *ngIf="isFrozen(user)" class="badge bg-warning text-dark">
+                <fa-icon [icon]="faSnowflake" class="me-1"></fa-icon>{{ frozenLabel(user) }}
+              </span>
+              <span *ngIf="!isFrozen(user)" class="text-muted small">Aktiivinen</span>
+            </td>
             <td class="text-muted small">{{ formatDate(user.createdAt || '') }}</td>
             <td>
-              <button class="btn btn-outline-secondary btn-sm"
-                      (click)="toggleRole(user)"
-                      [disabled]="user._id === authService.getUserId()">
-                {{ user.role === 'admin' ? '⬇ Tee user' : '⬆ Tee admin' }}
-              </button>
+              <!-- Toimintonappien ryhmä — piilotettu omalle tilille -->
+              <div *ngIf="!isOwnAccount(user)" class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-secondary" (click)="openModal('rename', user)" title="Muuta käyttäjänimi">
+                  <fa-icon [icon]="faPen"></fa-icon>
+                </button>
+                <button class="btn btn-outline-warning" (click)="openModal('pin', user)" title="Vaihda PIN">
+                  <fa-icon [icon]="faKey"></fa-icon>
+                </button>
+                <button *ngIf="!isFrozen(user)" class="btn btn-outline-info" (click)="openModal('freeze', user)" title="Jäädytä tili">
+                  <fa-icon [icon]="faSnowflake"></fa-icon>
+                </button>
+                <button *ngIf="isFrozen(user)" class="btn btn-info" (click)="openModal('unfreeze', user)" title="Poista jäädytys">
+                  <fa-icon [icon]="faSun"></fa-icon>
+                </button>
+                <button class="btn btn-outline-secondary" (click)="openModal('role', user)" title="Vaihda rooli">
+                  <fa-icon [icon]="user.role === 'admin' ? faArrowDown : faArrowUp"></fa-icon>
+                </button>
+                <button class="btn btn-outline-danger" (click)="openModal('delete', user)" title="Poista käyttäjä">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              </div>
+              <span *ngIf="isOwnAccount(user)" class="text-muted small fst-italic">—</span>
             </td>
           </tr>
           <tr *ngIf="users.length === 0">
-            <td colspan="4" class="text-center text-muted fst-italic">Ei käyttäjiä</td>
+            <td colspan="5" class="text-center text-muted fst-italic">Ei käyttäjiä</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
+</div>
+
+<!-- ============ KÄYTTÄJÄTOIMINTOJEN MODAL ============ -->
+<div class="user-action-overlay" *ngIf="modalType" (click)="closeModal()">
+  <div class="user-action-modal" (click)="$event.stopPropagation()">
+
+    <!-- Poisto -->
+    <ng-container *ngIf="modalType === 'delete'">
+      <div class="uam-icon uam-icon-danger"><fa-icon [icon]="faTrash"></fa-icon></div>
+      <h4 class="uam-title">Poistetaanko käyttäjä?</h4>
+      <p class="uam-sub">Tämä toiminto on <strong>peruuttamaton</strong>.</p>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+    </ng-container>
+
+    <!-- Nimen vaihto -->
+    <ng-container *ngIf="modalType === 'rename'">
+      <div class="uam-icon uam-icon-neutral"><fa-icon [icon]="faPen"></fa-icon></div>
+      <h4 class="uam-title">Muuta käyttäjänimi</h4>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+      <input class="uam-input" type="text" [(ngModel)]="modalInput"
+             placeholder="Uusi käyttäjänimi" autocomplete="off" maxlength="32" />
+    </ng-container>
+
+    <!-- PIN-vaihto -->
+    <ng-container *ngIf="modalType === 'pin'">
+      <div class="uam-icon uam-icon-warning"><fa-icon [icon]="faKey"></fa-icon></div>
+      <h4 class="uam-title">Vaihda PIN-koodi</h4>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+      <input class="uam-input" type="password" [(ngModel)]="modalInput"
+             placeholder="Uusi PIN (min 4 merkkiä)" inputmode="numeric" maxlength="12" autocomplete="new-password" />
+    </ng-container>
+
+    <!-- Jäädytys -->
+    <ng-container *ngIf="modalType === 'freeze'">
+      <div class="uam-icon uam-icon-info"><fa-icon [icon]="faSnowflake"></fa-icon></div>
+      <h4 class="uam-title">Jäädytä tili</h4>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+      <div class="uam-freeze-row">
+        <button class="uam-day-btn" *ngFor="let d of [1, 3, 7, 14, 30]"
+                [class.active]="modalDays === d" (click)="modalDays = d">
+          {{ d }}pv
+        </button>
+      </div>
+      <p class="uam-sub mt-2">Kirjautuminen estyy <strong>{{ modalDays }}</strong> päivän ajaksi.</p>
+    </ng-container>
+
+    <!-- Jäädytyksen poisto -->
+    <ng-container *ngIf="modalType === 'unfreeze'">
+      <div class="uam-icon uam-icon-info"><fa-icon [icon]="faSun"></fa-icon></div>
+      <h4 class="uam-title">Poista jäädytys</h4>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+      <p class="uam-sub">Käyttäjä voi kirjautua välittömästi.</p>
+    </ng-container>
+
+    <!-- Roolin vaihto -->
+    <ng-container *ngIf="modalType === 'role'">
+      <div class="uam-icon uam-icon-neutral"><fa-icon [icon]="faArrowsRotate"></fa-icon></div>
+      <h4 class="uam-title">Vaihda rooli</h4>
+      <p class="uam-name">{{ modalUser?.username }}</p>
+      <p class="uam-sub">
+        {{ modalUser?.role === 'admin' ? 'Admin → tavallinen käyttäjä' : 'Käyttäjä → admin' }}
+      </p>
+    </ng-container>
+
+    <!-- Virhe / onnistuminen -->
+    <div *ngIf="modalError" class="uam-error">{{ modalError }}</div>
+    <div *ngIf="modalSuccess" class="uam-success">{{ modalSuccess }}</div>
+
+    <!-- Napit -->
+    <div class="btn-group w-100 mt-3" role="group" *ngIf="!modalSuccess">
+      <button class="btn btn-lg uam-confirm-btn"
+              [class.btn-danger]="modalType === 'delete'"
+              [class.btn-primary]="modalType === 'rename' || modalType === 'role'"
+              [class.btn-warning]="modalType === 'pin'"
+              [class.btn-info]="modalType === 'freeze' || modalType === 'unfreeze'"
+              (click)="submitModal()"
+              [disabled]="modalLoading
+                || (modalType === 'rename' && modalInput.trim().length < 2)
+                || (modalType === 'pin' && modalInput.length < 4)">
+        {{ modalLoading ? 'Tallennetaan...' : 'Vahvista' }}
+      </button>
+      <button class="btn btn-outline-secondary btn-lg" (click)="closeModal()" [disabled]="modalLoading">
+        Peruuta
+      </button>
+    </div>
+
+  </div>
 </div>

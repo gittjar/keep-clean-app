@@ -60,3 +60,115 @@
 .grant-select {
   max-width: 180px;
 }
+
+/* ===================== KÄYTTÄJÄTOIMINTOJEN MODAL ===================== */
+.user-action-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+  animation: uamFadeIn 0.15s ease;
+}
+
+@keyframes uamFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.user-action-modal {
+  background: #fff;
+  border-radius: 18px;
+  padding: 2rem 2rem 1.8rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  animation: uamSlideUp 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes uamSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.uam-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.uam-icon-danger  { background: #fee2e2; color: #dc2626; }
+.uam-icon-warning { background: #fef3c7; color: #b45309; }
+.uam-icon-info    { background: #dbeafe; color: #2563eb; }
+.uam-icon-neutral { background: #f1f5f9; color: #4f46e5; }
+
+.uam-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.3rem;
+}
+
+.uam-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4f46e5;
+  margin: 0 0 0.6rem;
+}
+
+.uam-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0 0 0.4rem;
+}
+
+.uam-input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-top: 0.4rem;
+}
+
+.uam-input:focus { border-color: #4f46e5; }
+
+.uam-freeze-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.uam-day-btn {
+  padding: 6px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+  color: #374151;
+}
+
+.uam-day-btn:hover { border-color: #4f46e5; color: #4f46e5; }
+.uam-day-btn.active { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+
+.uam-error   { color: #dc2626; font-size: 0.88rem; margin-top: 0.5rem; }
+.uam-success { color: #059669; font-size: 0.95rem; font-weight: 600; margin-top: 0.5rem; }
+
+.uam-confirm-btn { flex: 2; }

@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToiletService, Toilet, AppUser } from '../services/toilet.service';
 import { AuthService } from '../services/auth.service';
+import {
+  faPen, faKey, faSnowflake, faSun, faArrowDown, faArrowUp,
+  faTrash, faArrowsRotate, faXmark, faCheck
+} from '@fortawesome/free-solid-svg-icons';
+
+export type UserModalType = 'rename' | 'pin' | 'freeze' | 'unfreeze' | 'delete' | 'role';
 
 @Component({
   standalone: false,
@@ -20,6 +26,27 @@ export class AdminComponent implements OnInit {
   grantUserIdMap: { [id: string]: string } = {};
 
   activeTab: 'toilets' | 'users' = 'toilets';
+
+  // Käyttäjätoimintojen modal
+  modalType: UserModalType | null = null;
+  modalUser: AppUser | null = null;
+  modalInput = '';
+  modalDays = 7;
+  modalLoading = false;
+  modalError = '';
+  modalSuccess = '';
+
+  // FontAwesome-ikonit
+  faPen = faPen;
+  faKey = faKey;
+  faSnowflake = faSnowflake;
+  faSun = faSun;
+  faArrowDown = faArrowDown;
+  faArrowUp = faArrowUp;
+  faTrash = faTrash;
+  faArrowsRotate = faArrowsRotate;
+  faXmark = faXmark;
+  faCheck = faCheck;
 
   constructor(
     private toiletService: ToiletService,
@@ -42,15 +69,123 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  toggleRole(user: AppUser) {
-    const newRole = user.role === 'admin' ? 'user' : 'admin';
-    if (!confirm(`Muutetaanko ${user.username} rooliksi "${newRole}"?`)) return;
-    this.toiletService.setUserRole(user._id, newRole).subscribe({
-      next: (updated) => {
-        user.role = updated.role;
-      },
-      error: (err) => alert(err.error?.message || 'Muutos epäonnistui')
-    });
+  // --- Modal ---
+  openModal(type: UserModalType, user: AppUser) {
+    this.modalType = type;
+    this.modalUser = user;
+    this.modalInput = type === 'rename' ? user.username : '';
+    this.modalDays = 7;
+    this.modalError = '';
+    this.modalSuccess = '';
+    this.modalLoading = false;
+  }
+
+  closeModal() {
+    this.modalType = null;
+    this.modalUser = null;
+    this.modalError = '';
+    this.modalSuccess = '';
+  }
+
+  submitModal() {
+    if (!this.modalUser) return;
+    this.modalLoading = true;
+    this.modalError = '';
+
+    switch (this.modalType) {
+      case 'rename':
+        this.toiletService.adminRenameUser(this.modalUser._id, this.modalInput).subscribe({
+          next: (u) => {
+            const idx = this.users.findIndex(x => x._id === u._id);
+            if (idx !== -1) this.users[idx] = u;
+            this.modalSuccess = `Käyttäjänimi vaihdettu → ${u.username}`;
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1500);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+
+      case 'pin':
+        this.toiletService.adminChangePin(this.modalUser._id, this.modalInput).subscribe({
+          next: () => {
+            this.modalSuccess = 'PIN vaihdettu onnistuneesti';
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1500);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+
+      case 'freeze':
+        this.toiletService.adminFreezeUser(this.modalUser._id, this.modalDays).subscribe({
+          next: (u) => {
+            const idx = this.users.findIndex(x => x._id === u._id);
+            if (idx !== -1) this.users[idx] = u;
+            this.modalSuccess = `Tili jäädytetty ${this.modalDays} päiväksi`;
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1500);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+
+      case 'unfreeze':
+        this.toiletService.adminFreezeUser(this.modalUser._id, 0).subscribe({
+          next: (u) => {
+            const idx = this.users.findIndex(x => x._id === u._id);
+            if (idx !== -1) this.users[idx] = u;
+            this.modalSuccess = 'Jäädytys poistettu';
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1500);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+
+      case 'delete':
+        this.toiletService.adminDeleteUser(this.modalUser._id).subscribe({
+          next: () => {
+            this.users = this.users.filter(u => u._id !== this.modalUser!._id);
+            this.modalSuccess = 'Käyttäjä poistettu';
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1200);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+
+      case 'role': {
+        const newRole = this.modalUser.role === 'admin' ? 'user' : 'admin';
+        this.toiletService.setUserRole(this.modalUser._id, newRole).subscribe({
+          next: (u) => {
+            const idx = this.users.findIndex(x => x._id === u._id);
+            if (idx !== -1) this.users[idx].role = u.role;
+            this.modalSuccess = `Rooli muutettu → ${u.role}`;
+            this.modalLoading = false;
+            setTimeout(() => this.closeModal(), 1200);
+          },
+          error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
+        });
+        break;
+      }
+    }
+  }
+
+  isFrozen(user: AppUser): boolean {
+    return !!user.frozenUntil && new Date(user.frozenUntil) > new Date();
+  }
+
+  frozenLabel(user: AppUser): string {
+    if (!user.frozenUntil) return '';
+    const msLeft = new Date(user.frozenUntil).getTime() - Date.now();
+    const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+    const until = new Date(user.frozenUntil).toLocaleDateString('fi-FI');
+    return `${daysLeft} pv jäljellä (asti ${until})`;
+  }
+
+  isOwnAccount(user: AppUser): boolean {
+    return user._id === this.authService.getUserId();
   }
 
   togglePerms(id: string) {

@@ -30,6 +30,7 @@ export interface AppUser {
   username: string;
   role: string;
   createdAt?: string;
+  frozenUntil?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -97,6 +98,23 @@ export class ToiletService {
 
   setUserRole(userId: string, role: string): Observable<AppUser> {
     return this.http.put<AppUser>(`${this.adminUrl}/users/${userId}/role`, { role }, { headers: this.getHeaders() });
+  }
+
+  // Admin: käyttäjähallinta
+  adminRenameUser(id: string, username: string): Observable<AppUser> {
+    return this.http.put<AppUser>(`${this.adminUrl}/users/${id}/username`, { username }, { headers: this.getHeaders() });
+  }
+
+  adminChangePin(id: string, pin: string): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.adminUrl}/users/${id}/pin`, { pin }, { headers: this.getHeaders() });
+  }
+
+  adminFreezeUser(id: string, days: number): Observable<AppUser> {
+    return this.http.put<AppUser>(`${this.adminUrl}/users/${id}/freeze`, { days }, { headers: this.getHeaders() });
+  }
+
+  adminDeleteUser(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.adminUrl}/users/${id}`, { headers: this.getHeaders() });
   }
 
   getElapsedHours(lastCleaned: string): number {

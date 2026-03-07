@@ -56,7 +56,10 @@
       </div>
 
       <!-- Virheilmoitus kirjautumisesta -->
-      <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+      <div *ngIf="errorMsg && !frozenError" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+      <div *ngIf="frozenError" class="alert alert-warning mt-3">
+        <strong>Tili jäädytetty</strong><br>{{ errorMsg }}
+      </div>
 
       <button
         type="submit"
