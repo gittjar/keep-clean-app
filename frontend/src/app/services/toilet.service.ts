@@ -113,8 +113,11 @@ export class ToiletService {
     return this.http.put<AppUser>(`${this.adminUrl}/users/${id}/freeze`, { days }, { headers: this.getHeaders() });
   }
 
-  adminDeleteUser(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.adminUrl}/users/${id}`, { headers: this.getHeaders() });
+  adminDeleteUser(id: string, toiletActions: { toiletId: string; action: 'delete' | 'reassign'; newOwnerId?: string }[] = []): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.adminUrl}/users/${id}`, {
+      headers: this.getHeaders(),
+      body: { toiletActions }
+    });
   }
 
   getElapsedHours(lastCleaned: string): number {

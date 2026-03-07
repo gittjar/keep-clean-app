@@ -100,14 +100,43 @@ router.put('/users/:id/freeze', async (req, res) => {
   }
 });
 
-// DELETE /api/admin/users/:id – poista käyttäjä
+// DELETE /api/admin/users/:id – poista käyttäjä + käsittele hänen vessat
+// Body: { toiletActions: [{ toiletId, action: 'delete'|'reassign', newOwnerId? }] }
 router.delete('/users/:id', async (req, res) => {
   try {
     if (req.params.id === req.userId) {
       return res.status(400).json({ message: 'Et voi poistaa omaa tiliäsi' });
     }
-    const user = await User.findByIdAndDelete(req.params.id);
+
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'Käyttäjää ei löydy' });
+
+    const { toiletActions } = req.body;
+
+    if (toiletActions && toiletActions.length > 0) {
+      // Käsittele jokainen vessa erikseen admin-valinnan mukaan
+      for (const ta of toiletActions) {
+        if (ta.action === 'delete') {
+          await Toilet.findByIdAndDelete(ta.toiletId);
+        } else if (ta.action === 'reassign' && ta.newOwnerId) {
+          await Toilet.findByIdAndUpdate(ta.toiletId, {
+            owner: ta.newOwnerId,
+            $pull: { allowedUsers: ta.newOwnerId } // uusi omistaja ei tarvitse allowedUsers-listausta
+          });
+        }
+      }
+    } else {
+      // Poistetaan kaikki käyttäjän omistamat vessat oletuksena
+      await Toilet.deleteMany({ owner: req.params.id });
+    }
+
+    // Siivoa käyttäjä kaikkien vessojen allowedUsers-listoilta
+    await Toilet.updateMany(
+      { allowedUsers: req.params.id },
+      { $pull: { allowedUsers: req.params.id } }
+    );
+
+    await User.findByIdAndDelete(req.params.id);
     res.json({ message: `Käyttäjä ${user.username} poistettu` });
   } catch (err) {
     res.status(500).json({ message: 'Poisto epäonnistui', error: err.message });

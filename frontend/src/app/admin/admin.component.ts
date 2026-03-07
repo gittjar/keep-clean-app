@@ -36,6 +36,11 @@ export class AdminComponent implements OnInit {
   modalError = '';
   modalSuccess = '';
 
+  // Poisto-modaalin monivaiheinen tila
+  deleteStep: 'toilets' | 'confirm' = 'confirm';
+  userOwnedToilets: Toilet[] = [];
+  toiletActionMap: { [id: string]: { action: 'delete' | 'reassign'; newOwnerId: string } } = {};
+
   // FontAwesome-ikonit
   faPen = faPen;
   faKey = faKey;
@@ -78,6 +83,16 @@ export class AdminComponent implements OnInit {
     this.modalError = '';
     this.modalSuccess = '';
     this.modalLoading = false;
+
+    if (type === 'delete') {
+      const owned = this.toilets.filter(t => t.owner._id === user._id);
+      this.userOwnedToilets = owned;
+      this.toiletActionMap = {};
+      owned.forEach(t => {
+        this.toiletActionMap[t._id] = { action: 'delete', newOwnerId: '' };
+      });
+      this.deleteStep = owned.length > 0 ? 'toilets' : 'confirm';
+    }
   }
 
   closeModal() {
@@ -85,6 +100,9 @@ export class AdminComponent implements OnInit {
     this.modalUser = null;
     this.modalError = '';
     this.modalSuccess = '';
+    this.deleteStep = 'confirm';
+    this.userOwnedToilets = [];
+    this.toiletActionMap = {};
   }
 
   submitModal() {
@@ -143,17 +161,31 @@ export class AdminComponent implements OnInit {
         });
         break;
 
-      case 'delete':
-        this.toiletService.adminDeleteUser(this.modalUser._id).subscribe({
+      case 'delete': {
+        const toiletActions = this.userOwnedToilets.map(t => ({
+          toiletId: t._id,
+          action: this.toiletActionMap[t._id].action,
+          newOwnerId: this.toiletActionMap[t._id].newOwnerId || undefined
+        }));
+        this.toiletService.adminDeleteUser(this.modalUser._id, toiletActions).subscribe({
           next: () => {
             this.users = this.users.filter(u => u._id !== this.modalUser!._id);
+            // Päivitä vessat: poista poistetut, päivitä siirrettyjen omistajat
+            const deletedIds = new Set(toiletActions.filter(a => a.action === 'delete').map(a => a.toiletId));
+            this.toilets = this.toilets.filter(t => !deletedIds.has(t._id));
+            for (const ta of toiletActions.filter(a => a.action === 'reassign')) {
+              const t = this.toilets.find(x => x._id === ta.toiletId);
+              const newOwner = this.users.find(u => u._id === ta.newOwnerId);
+              if (t && newOwner) t.owner = { _id: newOwner._id, username: newOwner.username };
+            }
             this.modalSuccess = 'Käyttäjä poistettu';
             this.modalLoading = false;
-            setTimeout(() => this.closeModal(), 1200);
+            setTimeout(() => this.closeModal(), 1400);
           },
           error: (err) => { this.modalError = err.error?.message || 'Epäonnistui'; this.modalLoading = false; }
         });
         break;
+      }
 
       case 'role': {
         const newRole = this.modalUser.role === 'admin' ? 'user' : 'admin';
@@ -186,6 +218,17 @@ export class AdminComponent implements OnInit {
 
   isOwnAccount(user: AppUser): boolean {
     return user._id === this.authService.getUserId();
+  }
+
+  get deleteActionsValid(): boolean {
+    return this.userOwnedToilets.every(t => {
+      const a = this.toiletActionMap[t._id];
+      return a && (a.action === 'delete' || (a.action === 'reassign' && !!a.newOwnerId));
+    });
+  }
+
+  get usersForReassign(): AppUser[] {
+    return this.users.filter(u => u._id !== this.modalUser?._id);
   }
 
   togglePerms(id: string) {

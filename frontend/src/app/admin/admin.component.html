@@ -154,12 +154,51 @@
 <div class="user-action-overlay" *ngIf="modalType" (click)="closeModal()">
   <div class="user-action-modal" (click)="$event.stopPropagation()">
 
-    <!-- Poisto -->
-    <ng-container *ngIf="modalType === 'delete'">
+    <!-- Poisto – vaihe 1: vessojen jakelu -->
+    <ng-container *ngIf="modalType === 'delete' && deleteStep === 'toilets'">
+      <div class="uam-icon uam-icon-danger"><fa-icon [icon]="faTrash"></fa-icon></div>
+      <h4 class="uam-title">Poistetaan: {{ modalUser?.username }}</h4>
+      <p class="uam-sub mb-2">Käyttäjällä on <strong>{{ userOwnedToilets.length }}</strong> WC-tila(a). Valitse kullekin toiminto:</p>
+      <div class="uam-toilet-list">
+        <div *ngFor="let t of userOwnedToilets" class="uam-toilet-row">
+          <div class="uam-toilet-info">
+            <strong>{{ t.name }}</strong>
+            <small class="text-muted d-block">{{ t.location }}</small>
+          </div>
+          <div class="uam-toilet-actions">
+            <select class="form-select form-select-sm" [(ngModel)]="toiletActionMap[t._id].action">
+              <option value="delete">Poista</option>
+              <option value="reassign">Jaa käyttäjälle</option>
+            </select>
+            <select *ngIf="toiletActionMap[t._id]?.action === 'reassign'"
+                    class="form-select form-select-sm mt-1"
+                    [(ngModel)]="toiletActionMap[t._id].newOwnerId">
+              <option value="">Valitse käyttäjä...</option>
+              <option *ngFor="let u of usersForReassign" [value]="u._id">{{ u.username }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="btn-group w-100 mt-3" role="group">
+        <button class="btn btn-primary uam-confirm-btn" [disabled]="!deleteActionsValid" (click)="deleteStep = 'confirm'">
+          Seuraava &rarr;
+        </button>
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Peruuta</button>
+      </div>
+    </ng-container>
+
+    <!-- Poisto – vaihe 2: lopullinen vahvistus -->
+    <ng-container *ngIf="modalType === 'delete' && deleteStep === 'confirm'">
       <div class="uam-icon uam-icon-danger"><fa-icon [icon]="faTrash"></fa-icon></div>
       <h4 class="uam-title">Poistetaanko käyttäjä?</h4>
-      <p class="uam-sub">Tämä toiminto on <strong>peruuttamaton</strong>.</p>
       <p class="uam-name">{{ modalUser?.username }}</p>
+      <p class="uam-sub" *ngIf="userOwnedToilets.length > 0">
+        {{ userOwnedToilets.length }} WC-tila(a) käsitellään valinnan mukaan.
+      </p>
+      <p class="uam-sub">Tämä toiminto on <strong>peruuttamaton</strong>.</p>
+      <button *ngIf="userOwnedToilets.length > 0" class="btn btn-sm btn-link p-0 mb-1" (click)="deleteStep = 'toilets'">
+        &larr; Muuta valintoja
+      </button>
     </ng-container>
 
     <!-- Nimen vaihto -->
@@ -216,8 +255,9 @@
     <div *ngIf="modalError" class="uam-error">{{ modalError }}</div>
     <div *ngIf="modalSuccess" class="uam-success">{{ modalSuccess }}</div>
 
-    <!-- Napit -->
-    <div class="btn-group w-100 mt-3" role="group" *ngIf="!modalSuccess">
+    <!-- Napit (piilotettu poisto-step 1:llä, sillä on omat nappinsa) -->
+    <div class="btn-group w-100 mt-3" role="group"
+         *ngIf="!modalSuccess && !(modalType === 'delete' && deleteStep === 'toilets')">
       <button class="btn btn-lg uam-confirm-btn"
               [class.btn-danger]="modalType === 'delete'"
               [class.btn-primary]="modalType === 'rename' || modalType === 'role'"

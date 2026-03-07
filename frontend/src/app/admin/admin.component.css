@@ -172,3 +172,34 @@
 .uam-success { color: #059669; font-size: 0.95rem; font-weight: 600; margin-top: 0.5rem; }
 
 .uam-confirm-btn { flex: 2; }
+
+/* Vessojen jakelu -lista poisto-modaalissa */
+.uam-toilet-list {
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+}
+
+.uam-toilet-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.uam-toilet-row:last-child { border-bottom: none; }
+
+.uam-toilet-info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+
+.uam-toilet-actions {
+  flex: 0 0 160px;
+}
