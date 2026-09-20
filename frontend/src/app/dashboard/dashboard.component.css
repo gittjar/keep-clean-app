@@ -286,6 +286,53 @@
   color: #991b1b;
 }
 
+.toilet-map-preview {
+  position: relative;
+  height: 110px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+.toilet-map-preview.empty-map {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+}
+
+.map-pin {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(17, 24, 39, 0.72);
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.map-label {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(15, 23, 42, 0.7);
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 /* ===================== LIST VIEW ===================== */
 .list-view-container {
   background: #fff;

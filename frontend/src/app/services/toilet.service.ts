@@ -18,6 +18,7 @@ export interface Toilet {
   name: string;
   location: string;
   toiletId: string;
+  backgroundImage?: string;
   lastCleaned: string;
   cleaningLog: CleaningEntry[];
   owner: ToiletUser;
@@ -49,8 +50,8 @@ export class ToiletService {
     return this.http.get<Toilet[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
-  addToilet(name: string, location: string, toiletId?: string): Observable<Toilet> {
-    return this.http.post<Toilet>(this.apiUrl, { name, location, toiletId }, { headers: this.getHeaders() });
+  addToilet(name: string, location: string, toiletId?: string, backgroundImage?: string): Observable<Toilet> {
+    return this.http.post<Toilet>(this.apiUrl, { name, location, toiletId, backgroundImage }, { headers: this.getHeaders() });
   }
 
   resetTimer(id: string): Observable<{ message: string; lastCleaned: string; toilet: Toilet }> {

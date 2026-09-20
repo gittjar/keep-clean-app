@@ -16,6 +16,7 @@ const toiletSchema = new mongoose.Schema(
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     allowedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     cleaningLog: { type: [cleaningEntrySchema], default: [] },
+    backgroundImage: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }

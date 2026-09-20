@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
   newName = '';
   newLocation = '';
   newToiletId = '';
+  newBackgroundImage = '';
   adding = false;
   showAddForm = false;
 
@@ -181,12 +182,13 @@ export class DashboardComponent implements OnInit {
   addToilet() {
     if (!this.newName || !this.newLocation) return;
     this.adding = true;
-    this.toiletService.addToilet(this.newName, this.newLocation, this.newToiletId).subscribe({
+    this.toiletService.addToilet(this.newName, this.newLocation, this.newToiletId, this.newBackgroundImage).subscribe({
       next: (t) => {
         this.toilets.push(t);
         this.newName = '';
         this.newLocation = '';
         this.newToiletId = '';
+        this.newBackgroundImage = '';
         this.adding = false;
         this.showAddForm = false;
       },
@@ -230,6 +232,12 @@ export class DashboardComponent implements OnInit {
 
   getElapsed(lastCleaned: string): string {
     return this.toiletService.formatElapsed(lastCleaned);
+  }
+
+  getMapBackground(toilet: Toilet): string {
+    return toilet.backgroundImage
+      ? `url("${toilet.backgroundImage}")`
+      : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)';
   }
 
   toggleHistory(id: string) {

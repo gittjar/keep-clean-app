@@ -78,11 +78,17 @@ router.get('/', async (req, res) => {
 // POST /api/toilets â€“ lisää uusi WC-tila
 router.post('/', async (req, res) => {
   try {
-    const { name, location, toiletId } = req.body;
+    const { name, location, toiletId, backgroundImage } = req.body;
     if (!name || !location) {
       return res.status(400).json({ message: 'Nimi ja sijainti vaaditaan' });
     }
-    const toilet = new Toilet({ name, location, toiletId: toiletId || '', owner: req.userId });
+    const toilet = new Toilet({
+      name,
+      location,
+      toiletId: toiletId || '',
+      backgroundImage: backgroundImage || '',
+      owner: req.userId
+    });
     await toilet.save();
     await toilet.populate('owner', 'username');
     res.status(201).json(toilet);
@@ -162,9 +168,16 @@ router.delete('/:id/revoke/:targetUserId', async (req, res) => {
 // PUT /api/toilets/:id â€“ päivitä tiedot (owner tai admin)
 router.put('/:id', async (req, res) => {
   try {
-    const { name, location, toiletId } = req.body;
+    const { name, location, toiletId, backgroundImage } = req.body;
     const filter = req.role === 'admin' ? { _id: req.params.id } : { _id: req.params.id, owner: req.userId };
-    const toilet = await Toilet.findOneAndUpdate(filter, { name, location, toiletId }, { new: true });
+
+    const update = {};
+    if (name !== undefined) update.name = name;
+    if (location !== undefined) update.location = location;
+    if (toiletId !== undefined) update.toiletId = toiletId;
+    if (backgroundImage !== undefined) update.backgroundImage = backgroundImage;
+
+    const toilet = await Toilet.findOneAndUpdate(filter, update, { new: true });
     if (!toilet) return res.status(404).json({ message: 'WC-tilaa ei löydy' });
     res.json(toilet);
   } catch (err) {
